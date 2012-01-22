@@ -1,2 +1,6 @@
 *.zip
 application/bootstrap.php
+*.komodoproject
+index.php
+.htaccess
+application/config/database.php
