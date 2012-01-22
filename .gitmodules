@@ -7,3 +7,6 @@
 [submodule "vendors/mixu/useradmin"]
 	path = vendors/mixu/useradmin
 	url = git://github.com/mixu/useradmin.git
+[submodule "vendors/kohana/kohana"]
+	path = vendors/kohana/kohana
+	url = git://github.com/kohana/kohana.git
