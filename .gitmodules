@@ -1,0 +1,3 @@
+[submodule "vendors/shadowhand/purifier"]
+	path = vendors/shadowhand/purifier
+	url = git://github.com/shadowhand/purifier.git
