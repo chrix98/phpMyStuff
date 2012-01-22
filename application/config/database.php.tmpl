@@ -1,0 +1,100 @@
+<?php defined('SYSPATH') or die('No direct access allowed.');
+
+/**
+* the identifier, telling which environment to use, for enviornments see below database_envs
+* @see $database_envs
+* @var mixed
+*/
+$default	=	'development';
+
+/**
+* the available database environments, i.e. production or development or staging.
+*
+* @var mixed
+*/
+$database_envs = array
+(
+	'development' => array
+	(
+		'type'       => 'mysql',
+		'connection' => array(
+			/**
+			 * The following options are available for MySQL:
+			 *
+			 * string   hostname     server hostname, or socket
+			 * string   database     database name
+			 * string   username     database username
+			 * string   password     database password
+			 * boolean  persistent   use persistent connections?
+			 * array    variables    system variables as "key => value" pairs
+			 *
+			 * Ports and sockets may be appended to the hostname.
+			 */
+			'hostname'   => 'localhost',
+			'database'   => '',
+			'username'   => '',
+			'password'   => '',
+			'persistent' => FALSE,
+		),
+		'table_prefix' => '',
+		'charset'      => 'utf8',
+		'caching'      => FALSE,
+		'profiling'    => TRUE,
+	),
+	'staging' => array
+	(
+		'type'       => 'mysql',
+		'connection' => array(
+			/**
+			 * The following options are available for MySQL:
+			 *
+			 * string   hostname     server hostname, or socket
+			 * string   database     database name
+			 * string   username     database username
+			 * string   password     database password
+			 * boolean  persistent   use persistent connections?
+			 * array    variables    system variables as "key => value" pairs
+			 *
+			 * Ports and sockets may be appended to the hostname.
+			 */
+			'hostname'   => 'localhost',
+			'database'   => '',
+			'username'   => '',
+			'password'   => '',
+			'persistent' => FALSE,
+		),
+		'table_prefix' => '',
+		'charset'      => 'utf8',
+		'caching'      => FALSE,
+		'profiling'    => TRUE,
+	),
+	'production' => array
+	(
+		'type'       => 'mysql',
+		'connection' => array(
+			/**
+			 * The following options are available for MySQL:
+			 *
+			 * string   hostname     server hostname, or socket
+			 * string   database     database name
+			 * string   username     database username
+			 * string   password     database password
+			 * boolean  persistent   use persistent connections?
+			 * array    variables    system variables as "key => value" pairs
+			 *
+			 * Ports and sockets may be appended to the hostname.
+			 */
+			'hostname'   => 'localhost',
+			'database'   => 'kohana',
+			'username'   => '',
+			'password'   => '',
+			'persistent' => FALSE,
+		),
+		'table_prefix' => '',
+		'charset'      => 'utf8',
+		'caching'      => FALSE,
+		'profiling'    => TRUE,
+	),
+);
+
+return array('default' => $database_envs[$default]);
