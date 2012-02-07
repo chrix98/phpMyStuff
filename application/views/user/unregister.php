@@ -10,7 +10,7 @@ echo Form::hidden('id', $id);
 echo '<p>'.__('Are you sure you want to remove your user account?').'</p>';
 
 echo '<p>'.Form::radio('confirmation', 'Y').' '.__('Yes').'<br/>';
-echo Form::radio('confirmation', 'N', true).' '.__('No').<br/></p>';
+echo Form::radio('confirmation', 'N', true).' '.__('No').'<br/></p>';
 
 echo Form::submit(NULL, 'Confirm');
 echo Form::close();
