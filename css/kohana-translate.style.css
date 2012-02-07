@@ -1,0 +1,277 @@
+/** Css reset: except table{border-collapse:collapse;border-spacing:0;} **/
+html{color:#000;background:#FFF;}body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,button,textarea,p,blockquote,th,td{margin:0;padding:0;}fieldset,img{border:0;}address,caption,cite,code,dfn,em,strong,th,var,optgroup{font-style:inherit;font-weight:inherit;}del,ins{text-decoration:none;}li{list-style:none;}caption,th{text-align:left;}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal;}q:before,q:after{content:'';}abbr,acronym{border:0;font-variant:normal;}sup{vertical-align:baseline;}sub{vertical-align:baseline;}legend{color:#000;}input,button,textarea,select,optgroup,option{font-family:inherit;font-size:inherit;font-style:inherit;font-weight:inherit;}input,button,textarea,select{font-size:100%;}
+
+/* Global styles: body, paragraphs, lists etc */
+
+body {
+   font-family: Arial,Helvetica,Sans-serif;
+   background-color: rgb(255,255,255);
+   margin: 0px;
+}
+
+/* Page */
+
+/* Header */
+
+#navigation {
+   background-color: black;
+   height: 45px;
+}
+
+#header-logo {
+    border: 0pt none;
+    padding: 0px;
+    margin: 0px;
+    background-color: transparent;
+  }
+
+/* Content */
+#content {
+    padding-left: 20px;
+}
+
+
+/* Headings */
+
+h1,h2,h3,h4,h5,h6{
+	font-family: Georgia, serif;
+	margin-bottom:5px;
+	font-weight:normal;
+}
+
+h1 { font-size: 2.615em; line-height:1.18;  } /* 34px */
+h2 { font-size: 2em; line-height:1.19;    } /* 26px */
+h3 { font-size: 1.618em; line-height:1.24;   } /* 21 */
+h4 { font-size: 1.308em; line-height:1.23;  } /* 17*/
+h5,h6 { font-size: 1em; line-height:1.3;   font-weight:700; } /* 13px */
+
+p {
+   margin-bottom:0.7em;
+   margin-top:0.3em;
+}
+
+/* Menus */
+
+   /** Nice looking "new" menu style. **/
+   ul.menu {
+      background:none repeat scroll 0 0 black;
+
+      font-family:Arial,sans-serif;
+      font-size:15px;
+      font-weight:bold;
+      height:40px;
+      list-style-type:none;
+      padding:0;
+   }
+
+   ul.menu li{
+      float:left;
+      margin:0;
+   }
+
+   ul.menu li a, ul.menu li span {
+      color:#FFFFFF;
+      display:block;
+      line-height:40px;
+      padding:0 20px;
+      text-decoration:none;
+   }
+   /** Selected item**/
+   ul.menu li a.selected, ul.menu li.active a, ul.menu li a:hover {
+      background:none repeat scroll 0 0 #3D7BBB;
+      border-bottom:2px solid #356AA0;
+   }
+
+   /** Nice looking "new" submenu style. **/
+   ul.submenu {
+      background:none repeat scroll 0 0 lightgray;
+      border-bottom:2px solid #000000;
+      border-top:2px solid #333333;
+
+      font-family:Arial,sans-serif;
+      font-size:13px;
+      height:25px;
+      list-style-type:none;
+      padding:0;
+   }
+
+   ul.submenu li{
+      float:left;
+      margin:0;
+   }
+
+   ul.submenu li a {
+      color:#FFFFFF;
+      display:block;
+      line-height:25px;
+      padding:0 10px;
+      text-decoration:none;
+   }
+
+   ul.submenu li a:hover {
+      background:none repeat scroll 0 0 #555555;
+      border-bottom:2px solid #444444;
+   }
+
+
+/* Forms */
+
+   label {
+      display: block;
+   }
+
+   /** Error color **/
+   input.error {
+     color:#CC0000;
+     border:solid 1px #CC0000; background:#F7CBCA;
+   }
+   /** When IE6 dies, replace with element-specifics. This is supposed to apply to only text, password and file. **/
+   input.text, input.password, input.file {
+      border:1px solid #DEDEDE;
+      color:#525151;
+      font-size:20px;
+      height:30px;
+      padding:2px 0 0 5px;
+      width:420px;
+      margin-bottom:10px;
+   }
+   select {
+      margin-bottom:10px;
+   }
+   /** Again, without IE6 these would be element type selectors. We need a small margin. **/
+   input.radio, input.checkbox {
+      margin:0 0.4em 0 0;
+   }
+   textarea {
+      border:1px solid #DEDEDE;
+      color:#525151;
+      font-size:12pt;
+      padding:2px 0 0 5px;
+      width:420px;
+      margin-bottom: 10px;
+   }
+
+   /** Contextual help near form elements **/
+
+   div.help {
+      color:#666666;
+      font-family:Verdana;
+      font-size:x-small;
+      padding:0;
+   }
+
+
+/* Messages */
+div.info {
+  padding: 6px;
+  color:#5C5C5C;
+  border:solid 1px #CBDFE7; background:#DEF1F8;  margin-top: 4px; margin-bottom: 4px;
+}
+
+div.success {
+  padding: 6px;
+  color:#008000;
+  border:solid 1px #349534; background:#C9FFCA; margin-left: 2px; margin-top: 4px; margin-bottom: 4px;
+}
+
+div.error {
+  padding: 6px;
+  color:#CC0000;
+  border:solid 1px #CC0000; background:#F7CBCA; margin-left: 2px; margin-top: 4px; margin-bottom: 4px;
+}
+
+/* Content tables  */
+   table.content, table.content th, table.content td {
+      border-collapse: collapse;
+      font-family: "Trebuchet MS", Arial, sans-serif;
+      color: #555;
+      border-bottom: 1px solid #eeeeee;
+   }
+   table.content td.caption {
+     text-align: right;
+   }
+
+   /* Can use either tr.heading and td, or thead and th to create a heading..*/
+   table.content tr.heading td, table.content thead th {
+     border-top:1px solid #CCCCCC;
+     border-bottom:1px solid #CCCCCC;
+     padding-top: 6px;
+     color: #000000;
+   }
+   
+   table.content td, table.content th {
+     padding-bottom:5px;
+     padding-top:5px;
+     padding-left:4px;
+     padding-right:4px;
+   }
+
+   /* Table cells containing a caption have this class */
+   table.content td.caption {
+      text-align:right;
+   }
+
+   /* Row colors */
+
+   table.content tr { background: #FCFDFE; }
+
+   /* Can use TR.odd or TD.odd for odd rows/columns */
+   table.content tr.odd, table.content td.odd { background: #eeeeee; }
+
+
+   /** Tabs widget **/
+   div.tabs {
+      padding-top: 5px;
+      height:23px;
+   }
+   div.tabs ul {
+      height: 20px;
+      margin: 0;
+   }
+   div.tabs ul li {
+      margin: 0;
+      padding: 0;
+      display: inline;
+      list-style-type: none;
+   }
+   div.tabs ul a:link, div.tabs ul a:visited {
+      float: left;
+      background: #f3f3f3;
+      padding: 2px 10px 0px 10px;
+      margin-right: 4px;
+      /** border: 1px solid #ccc; **/
+      border-top: 1px solid #ccc;
+      border-left: 1px solid #ccc;
+      border-right: 1px solid #ccc;
+      text-decoration: none;
+   }
+   div.tabs ul li.selected a, div.tabs ul a:link.selected, div.tabs ul a:visited.selected {
+      background: #fff;
+   }
+   div.tabs ul a:hover {
+      background: #fff;
+   }
+   /** Progress bar widget **/
+   div.progress-container {
+     border: 1px solid #ccc;
+     width: 200px;
+     margin: 2px 5px 2px 0;
+     padding: 1px;
+     display: block;
+     background: white;
+     position:relative;
+   }
+
+   div.progress-container div {
+     background-color: #ACE97C;
+     height: 20px;
+   }
+   div.progress-container  span {
+    width:200px;
+    text-align:center;
+    float:left;
+    font: normal 12px Arial,sans-serif;
+    margin-top: 3px;
+   }
+
+/* Footer */

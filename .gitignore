@@ -1,6 +1,17 @@
 *.zip
+*.bak
 application/bootstrap.php
 *.komodoproject
+.komodotools
 index.php
 .htaccess
 application/config/database.php
+application/logs/
+application/cache/
+application/config/auth.php
+application/config/facebook.php
+application/config/languages.php
+application/config/pagination.php
+application/config/purifier.php
+application/config/useradmin.php
+
