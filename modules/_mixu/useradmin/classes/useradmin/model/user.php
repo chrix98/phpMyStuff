@@ -43,6 +43,19 @@ class Useradmin_Model_User extends Model_Auth_User {
 		return $parent;
 	}
 	
+	/**
+	 * Labels for fields in this model
+	 *
+	 * @return array Labels
+	 */
+	public function labels()
+	{
+		$parent = parent::labels();
+		$parent['first_name'] = 'first name';
+		$parent['last_name'] = 'last name';
+		return $parent;
+	}
+
 	// TODO overload filters() and add username/created_on/updated_on coluns filters
 
 	/**

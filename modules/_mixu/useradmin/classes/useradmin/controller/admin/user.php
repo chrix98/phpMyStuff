@@ -49,8 +49,8 @@ class Useradmin_Controller_Admin_User extends Controller_App {
 		// Create a paginator
 		$pagination = new Pagination(array(
 			'total_items' => $total, 
-			'items_per_page' => 30,  // set this to 30 or 15 for the real thing, now just for testing purposes...
-			'auto_hide' => false, 
+			'items_per_page' => 10,  // set this to 30 or 15 for the real thing, now just for testing purposes...
+			'auto_hide' => true,
 			'view' => 'pagination/useradmin'
 		));
 		// Get the items for the query
@@ -73,8 +73,11 @@ class Useradmin_Controller_Admin_User extends Controller_App {
 	 * @param string $id
 	 * @return void
 	 */
-	public function action_edit($id = NULL)
+	public function action_edit()
 	{
+		if(! $id = $this->request->param('id'))
+			$id = null;
+
 		// set the template title (see Controller_App for implementation)
 		$this->template->title = __('Edit user');
 		// load the content from view
@@ -213,8 +216,11 @@ class Useradmin_Controller_Admin_User extends Controller_App {
 	 * @param string $id
 	 * @return void
 	 */
-	public function action_delete($id = NULL)
+	public function action_delete()
 	{
+		if(! $id = $this->request->param('id'))
+			$id = null;
+
 		// set the template title (see Controller_App for implementation)
 		$this->template->title = __('Delete user');
 		$user = ORM::factory('user', $id);
@@ -226,7 +232,10 @@ class Useradmin_Controller_Admin_User extends Controller_App {
 				// Delete the user
 				$user->delete($id);
 				// Delete any associated identities
-				DB::delete('user_identity')->where('user_id', '=', $id)
+				DB::delete('user_identities')->where('user_id', '=', $id)
+				                           ->execute();
+				// Delete any associated role mappings
+				DB::delete('roles_users')->where('user_id', '=', $id)
 				                           ->execute();
 				// message: save success
 				Message::add('success', __('User deleted.'));

@@ -88,6 +88,8 @@ class Useradmin_Auth_ORM extends Kohana_Auth_ORM implements Useradmin_Driver_iAu
 				'username',
 				'password',
 				'email',
+				'first_name',
+				'last_name'
 			));
 			// Add the login role to the user (add a row to the db)
 			$login_role = new Model_Role(array('name' =>'login'));

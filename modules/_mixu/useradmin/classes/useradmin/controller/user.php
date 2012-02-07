@@ -43,8 +43,12 @@ class Useradmin_Controller_User extends Controller_App {
 
     public function before(){
         $baseUrl = Url::base(true);
+        $siteUrl = substr(Url::site(),1,-1);//strip leading/trailing slashes
+
         if(substr($this->request->referrer(),0,strlen($baseUrl)) == $baseUrl){
             $urlPath = ltrim(parse_url($this->request->referrer(),PHP_URL_PATH),'/');
+            $urlPath = str_replace($siteUrl, '', $urlPath);
+
             $processedRef = Request::process_uri($urlPath);
             $referrerController = Arr::path(
                 $processedRef,
@@ -54,7 +58,8 @@ class Useradmin_Controller_User extends Controller_App {
             if($referrerController && $referrerController != 'user' && !Session::instance()->get('noReturn',false)){
                 Session::instance()->set('returnUrl',$this->request->referrer());
             }
-
+        }else{
+			//LOG::instance()->add(LOG::DEBUG, 'refferer is from ...'.var_export($this->request->referrer(),1));
         }
 
         parent::before();
@@ -130,7 +135,9 @@ class Useradmin_Controller_User extends Controller_App {
 				array(
 					'username', 
 					'password', 
-					'email'
+					'email',
+					'first_name',
+					'last_name'
 				));
 				// message: save success
 				Message::add('success', __('Values saved.'));
@@ -275,7 +282,10 @@ class Useradmin_Controller_User extends Controller_App {
 			// Delete the user
 			$user->delete($id);
 			// Delete any associated identities
-			DB::delete('user_identity')->where('user_id', '=', $id)
+			DB::delete('user_identities')->where('user_id', '=', $id)
+			                           ->execute();
+			// Delete any associated role mappings
+			DB::delete('roles_users')->where('user_id', '=', $id)
 			                           ->execute();
 			// message: save success
 			Message::add('success', __('User deleted.'));
@@ -541,6 +551,9 @@ class Useradmin_Controller_User extends Controller_App {
 	 */
 	function action_provider ($provider_name = null)
 	{
+		if(!$provider_name = $this->request->param('provider'))
+			$provider_name = null;
+
 		if (Auth::instance()->logged_in())
 		{
 			Message::add('success', 'Already logged in.');
@@ -548,6 +561,7 @@ class Useradmin_Controller_User extends Controller_App {
 			$this->request->redirect('user/profile');
 		}
 		$provider = Provider::factory($provider_name);
+
 		if ($this->request->query('code') && $this->request->query('state'))
 		{
 			$this->action_provider_return($provider_name);
@@ -566,6 +580,9 @@ class Useradmin_Controller_User extends Controller_App {
 
 	function action_associate($provider_name = null)
 	{
+		if(!$provider_name = $this->request->param('id'))
+			$provider_name = null;
+
 	if ($this->request->query('code') && $this->request->query('state'))
 	{
 		$this->action_associate_return($provider_name);
@@ -626,6 +643,9 @@ class Useradmin_Controller_User extends Controller_App {
 	 */
 	function action_associate_return($provider_name = null)
 	{
+		if(!$provider_name = $this->request->param('id'))
+			$provider_name = null;
+
 		if (Auth::instance()->logged_in())
 		{
 			$provider = Provider::factory($provider_name);
@@ -670,6 +690,10 @@ class Useradmin_Controller_User extends Controller_App {
 	 */
 	function action_provider_return($provider_name = null)
 	{
+		if(!$provider_name = $this->request->param('id'))
+			$provider_name = null;
+
+
 		$provider = Provider::factory($provider_name);
 		if (! is_object($provider))
 		{
