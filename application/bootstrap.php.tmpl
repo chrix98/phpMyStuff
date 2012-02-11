@@ -22,7 +22,7 @@ else
  * @see  http://kohanaframework.org/guide/using.configuration
  * @see  http://php.net/timezones
  */
-date_default_timezone_set('America/Chicago');
+date_default_timezone_set('Europe/London');
 
 /**
  * Set the default locale.
@@ -30,7 +30,7 @@ date_default_timezone_set('America/Chicago');
  * @see  http://kohanaframework.org/guide/using.configuration
  * @see  http://php.net/setlocale
  */
-setlocale(LC_ALL, 'en_US.utf-8');
+setlocale(LC_ALL, 'en_GB.utf-8');
 
 /**
  * Enable the Kohana auto-loader.
@@ -50,10 +50,7 @@ ini_set('unserialize_callback_func', 'spl_autoload_call');
 
 // -- Configuration and initialization -----------------------------------------
 
-/**
- * Set the default language
- */
-I18n::lang('en-us');
+
 
 /**
  * Set Kohana::$environment if a 'KOHANA_ENV' environment variable has been supplied.
@@ -81,6 +78,10 @@ if (isset($_SERVER['KOHANA_ENV']))
  */
 Kohana::init(array(
 	'base_url'   => '/',
+	'index_file'	=>	false,
+	'char_set'		=>	'utf-8',
+	'errors'		=>	true,
+	'profile'		=>	true
 ));
 
 /**
@@ -97,20 +98,49 @@ Kohana::$config->attach(new Config_File);
  * Enable modules. Modules are referenced by a relative or absolute path.
  */
 Kohana::modules(array(
-	// 'auth'       => MODPATH.'auth',       // Basic authentication
+	'user'       => MODPATH.'_mixu/useradmin',     		// Useradmin module
+	'auth'       => MODPATH.'auth',       // Basic authentication
+	'database'   => MODPATH.'database',   // Database access
+	'orm'        => MODPATH.'orm',        // Object Relationship Mapping
+	'pagination' => MODPATH.'_shadowhand/pagination',   // pagination module, used in useradmin
+	//'kohana-email'	=> MODPATH.'kohana-email',			// Kohana-Email for email
 	// 'cache'      => MODPATH.'cache',      // Caching with multiple backends
-	// 'codebench'  => MODPATH.'codebench',  // Benchmarking tool
-	// 'database'   => MODPATH.'database',   // Database access
+	//'codebench'  	=> MODPATH.'codebench',					// Benchmarking tool
 	// 'image'      => MODPATH.'image',      // Image manipulation
-	// 'orm'        => MODPATH.'orm',        // Object Relationship Mapping
 	// 'unittest'   => MODPATH.'unittest',   // Unit testing
-	// 'userguide'  => MODPATH.'userguide',  // User guide and API documentation
+
+	//'userguide'		=> MODPATH.'userguide',  				// User guide and API documentation
+	//'security'		=> MODPATH.'purifier',
 	));
+
+/**
+ * Set the default cookie salt
+ */
+Cookie::$salt = 'putsomethingreallycryptichere';
+
+
+/**
+ * Set the language from cookie
+ */
+$lang = Cookie::get('lang', Kohana::$config->load('languages.system_default_language'));
+if(!in_array($lang, Kohana::$config->load('languages.valid_languages'))) {
+   $lang = 'en-gb';
+}
+Cookie::set('lang', $lang);
+I18n::lang($lang);
+
 
 /**
  * Set the routes. Each route must have a minimum of a name, a URI and a set of
  * defaults for the URI.
  */
+
+Route::set('change_language', 'change_language(/<lang>)')
+   ->defaults(array(
+		 'controller'	=>	'welcome',
+		 'action'		=>	'change_language',
+   ));
+
 Route::set('default', '(<controller>(/<action>(/<id>)))')
 	->defaults(array(
 		'controller' => 'welcome',
