@@ -1,18 +1,15 @@
-kohana32_useradmin
+phpMyStuff
 
-I have created this project to be able to seperately 
-maintain a base install of kohana 3.2 with useradmin 
-that I can then use as a basis for other applications.
+phpMyStuff (pms) is a LAMP based web application allowing facebook 
+style activity for its users on ones own server, but with a twist.
 
-Using the base as a seperate project allows me to merge
-in any bugfixes or upgrades into one single repo and
-then pull them into the other projects where needed.
-
-Currently, this project consists of the following:
-
-kohana 3.2
-mixu's useradmin module with mods to run in ko32
-mixu's i18n class to record language strings (handy during development) with mods to run in ko32
-shadowhand's pagination class with mods to run in ko32
-shadowhand's purifier class with mods to run in ko32
+Whilst allowing to share multimedia as well as any other managed 
+contents and networking users in circles, it can also connect to other
+instances of this application and exchange data. For example, user A
+runs this app for himself and his friends. A friend, lets call him 66,
+also runs this app for himself and is also a friend of user A.
+Now either one can add the friend as usual but ticking a box that this 
+friend has their own instance, it will then connect the two sites 
+together and exchange data so that either side can see the activities of
+their counter part as if they were one the same site.
 
