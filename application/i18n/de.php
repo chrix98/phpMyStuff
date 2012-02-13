@@ -4,6 +4,9 @@
  * Automatically generated from previous translation file.
  */
 return array (
+  'Confirm removing your user account' => 'Konto l&ouml;schen best&auml;tigen',
+  'Are you sure you want to remove your user account?' => 'Sind Sie sicher das Sie Ihr Konto l&ouml;schen m&ouml;chten?',
+  'User Guide' => 'Benutzer Handbuch',
   'Values saved.' => 'Daten gespeichert.',
   'This is your user information, :username .' => 'Dies sind Ihre Informationen, :username .',
   'Username & Email Address' => 'Benutzername & E-mail Addresse',
@@ -11,7 +14,6 @@ return array (
   'Login Activity' => 'Login Vergangenheit',
   'Last login was :date, at :time.' => 'Letzter login war :date, um :time.',
   'Total logins: :logins' => 'Anzahl logins: :logins',
-  'User Guide' => 'Benutzer Handbuch',
   'Dutch' => 'Holl&auml;ndisch',
   'English' => 'Englisch',
   'English (en-us)' => 'Englisch (US)',
@@ -61,7 +63,7 @@ return array (
   'Last' => 'Letzte(r)',
   'never' => 'Nie',
   'Edit' => 'Bearbeiten',
-  'Delete' => 'Löschen',
+  'Delete' => 'LÃ¶schen',
   'Role(s)' => 'Rolle',
   'Last login' => 'Letzter Login',
   '# of logins' => '# der Logins',
