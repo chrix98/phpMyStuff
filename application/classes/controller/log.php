@@ -19,34 +19,43 @@
 //	the output array containing lines of output per item
 $fileoutput = array();
 //define("LOG_FILE_REGEX", "/(?<year>[0-9]{4})-(?<month>[0-9]{2})-(?<day>[0-9]{2})\.[0-9]+/");	//	this one is for when the posix pid is appended
-define("LOG_FILE_REGEX", "/(?<year>[0-9]{4})\/(?<month>[0-9]{2})\/(?<day>[0-9]{2})/");
+//define("LOG_FILE_REGEX", "/(?<year>[0-9]{4})\/(?<month>[0-9]{2})\/(?<day>[0-9]{2})/");
+define("LOG_FILE_REGEX", "/.php/");
 
 
 
 class Controller_Log extends Controller {
 
-	function __construct(){
-		$this->debug		=	"style=\"color: green\"";
+	function __construct()
+	{
+		$this->debug	=	"style=\"color: green\"";
 		$this->info		=	"style=\"color: gray\"";
-		$this->error		=	"style=\"color: red\"";
+		$this->error	=	"style=\"color: red\"";
 		$this->lnno		=	"style=\"background-color: lightgray\"";
 		$this->hghlght	=	"style=\"background-color:	yellow;font-weight:bold;text-transform: uppercase;\"";
 
-		$this->g_filter 		= isset($_GET['filter']) 	? trim(urldecode($_GET['filter'])) : '';
+		$this->g_filter 	= isset($_GET['filter']) 	? trim(urldecode($_GET['filter'])) : '';
 		$this->g_truncate 	= isset($_GET['truncate']) 	? trim(urldecode($_GET['truncate'])) : '';
-		$this->g_goto			= isset($_GET['goto']) 		? trim(urldecode($_GET['goto'])) : '';
+		$this->g_goto		= isset($_GET['goto']) 		? trim(urldecode($_GET['goto'])) : '';
 		$this->g_delete		= isset($_GET['delete']) 	? trim(urldecode($_GET['delete'])) : '';
 
-		$this->logfilename	= APPPATH."logs/".date("Y")."/".date("m")."/".date("d").".php";
+		//$this->logfilename	= APPPATH."logs/".date("Y")."/".date("m")."/".date("d").".php";
+		if(isset($_GET['logfile']))	{
+			$this->logfilename = APPPATH.$_GET['logfile'];
+		}else{
+			$this->logfilename = '';
+		}
+
 		$this->logdir		= APPPATH."logs/";
 
-		$this->disallowed_files = array(".", "..");
+		$this->disallowed_files = array(".", "..", "index.php");
 
 		$this->log = LOG::instance();
 
-		$this->log->add(LOG::INFO, " -- Starting");
+//		$this->log->add(LOG::INFO, " -- Starting");
 
-		if($this->g_truncate=='1') {
+		if($this->g_truncate=='1')
+		{
 			if($fh = fopen($this->logfilename, 'w+'))	{
 				fwrite($fh, "");
 				fclose($fh);
@@ -80,6 +89,8 @@ class Controller_Log extends Controller {
 	{
 		$this->log->add(LOG::INFO, __METHOD__.": entered");
 
+		LOG::instance()->add(LOG::DEBUG, __METHOD__.": logfile: ".var_export($this->logfilename,1));
+
 		if(file_exists($this->logfilename) && is_readable($this->logfilename))	{
 			$this->log->add(LOG::INFO, __METHOD__.": we use log file" );
 			$file = file_get_contents($this->logfilename);
@@ -87,6 +98,7 @@ class Controller_Log extends Controller {
 		}else{
 			$this->log->add(LOG::DEBUG, __METHOD__.": listing files" );
 			$fileoutput = $this->_list_files();
+			$this->log->add(LOG::DEBUG, __METHOD__.": ...".var_export($fileoutput,1) );
 		}
 
 		$this->show($fileoutput);
@@ -140,36 +152,49 @@ class Controller_Log extends Controller {
 		$this->log->add(LOG::INFO, __METHOD__.": entered with dir: :dir", array(':dir'=>$dir) );
 
 		$ret = array();
+		if( "/" != substr($dir, -1))
+			$dir .= "/";
 
-		if (is_dir($dir))
-		{
-			if ($dh = opendir($dir))
-			{
-				while ((($file = readdir($dh)) !== false) && !in_array($file, $this->disallowed_files)) {
-//					if(preg_match(LOG_FILE_REGEX, $file) && is_readable($dir."/".$file))
-					if(preg_match(LOG_FILE_REGEX, $file) )
-					{
-						$ret[] = $file;
-					}elseif(is_dir($file))
-					{
-						$tmp = $this->_read_log_files($file);
-						$ret = array_merge($ret, $tmp);
+		if (is_dir($dir))	{
+			if ($dh = opendir($dir))	{
+				while ((($file = readdir($dh)) !== false)	) {
+					LOG::instance()->add(LOG::DEBUG, __METHOD__.": found file: ".var_export($file,1));
+
+					if(in_array($file, $this->disallowed_files))
+						continue;
+
+					if(preg_match(LOG_FILE_REGEX, $file) )	{
+						LOG::instance()->add(LOG::DEBUG, __METHOD__.": file matches LOG_FILE_REGEX: ".var_export(LOG_FILE_REGEX,1));
+						$ret[] = $dir.$file;
+
+					}elseif(is_dir($dir.$file))	{
+						LOG::instance()->add(LOG::DEBUG, __METHOD__.": file is a dir - reading contents ...");
+
+						if($tmp = $this->_read_log_files($dir.$file))	{
+							LOG::instance()->add(LOG::DEBUG, __METHOD__.": dirs subcontent: ".var_export($tmp,1));
+							$ret = array_merge($ret, $tmp);
+							unset($tmp);
+						}
 					}else
 					{
-						echo "no pregmatch on $file";
+						LOG::instance()->add(LOG::DEBUG, __METHOD__.": file not a dir and not matching regex ".$file);
 					}
 				}
 				closedir($dh);
 
-				if(count($ret))
-					return $ret;
 			}else{
-				echo "no opendir?";
+				LOG::instance()->add(LOG::DEBUG, __METHOD__.": can not read directory: ".var_export($dir,1));
 			}
 		}else{
 			//echo "no dir?";
+			LOG::instance()->add(LOG::DEBUG, __METHOD__.": not a directory: ".var_export($dir,1));
 		}
-		return false;
+
+		if(count($ret)<1)
+			$ret = false;
+
+		LOG::instance()->add(LOG::DEBUG, __METHOD__.": finished, returning: ".var_export($ret,1));
+		return $ret;
 	}
 
 	function _list_files()
@@ -179,7 +204,7 @@ class Controller_Log extends Controller {
 		$logfiles = $this->_read_log_files($this->logdir);
 		if(!$logfiles || !is_array($logfiles) || !count($logfiles))
 		{
-			echo "No Log files ?";
+			LOG::instance()->add(LOG::DEBUG, __METHOD__.": No log files ? ".var_export($logfiles,1));
 			return false;
 		}
 
@@ -192,10 +217,17 @@ class Controller_Log extends Controller {
 			$ext = substr($file, strrpos($file,".")+1);
 			preg_match(LOG_FILE_REGEX, $file, $matches);
 
-			$link = (($matches[0] && filesize($file)>0) ? ("<a href='?logfile=".$matches[0]."'>".$file."</a>") : ($file));
-			$view_link = (($matches[0] && filesize($file)>0) ? ("<a href='?logfile=".$matches[0]."'>View</a>") : ('View'));
-			$trunc_link = (($matches[0] && filesize($file)>0) ? ("<a href='?truncate=1&logfile=".$matches[0]."'>Truncate</a>") : ('Truncate'));
-			$delet_link = (($matches[0] && is_writable($file)) ? ("<a href='?delete=1&logfile=".$matches[0]."'>Delete</a>") : ('Delete'));
+//			$link 		= (($matches[0] && filesize($file)>0) ? ("<a href='?logfile=".$matches[0]."'>".$file."</a>") : ($file));
+//			$view_link 	= (($matches[0] && filesize($file)>0) ? ("<a href='?logfile=".$matches[0]."'>View</a>") : ('View'));
+//			$trunc_link	= (($matches[0] && filesize($file)>0) ? ("<a href='?truncate=1&logfile=".$matches[0]."'>Truncate</a>") : ('Truncate'));
+//			$delet_link	= (($matches[0] && is_writable($file)) ? ("<a href='?delete=1&logfile=".$matches[0]."'>Delete</a>") : ('Delete'));
+
+			$fileParm = str_replace(APPPATH, "", $file);
+
+			$link 		= (($file && filesize($file)>0) ? ("<a href='?logfile=".$fileParm."'>".$fileParm."</a>") : ($file));
+			$view_link 	= (($file && filesize($file)>0) ? ("<a href='?logfile=".$fileParm."'>View</a>") : ('View'));
+			$trunc_link	= (($file && filesize($file)>0) ? ("<a href='?truncate=1&logfile=".$fileParm."'>Truncate</a>") : ('Truncate'));
+			$delet_link	= (($file && is_writable($file)) ? ("<a href='?delete=1&logfile=".$fileParm."'>Delete</a>") : ('Delete'));
 
 			$fileoutput[] = "<img src='/icons/".$ext.".gif' width='20' height='20' >&nbsp;".
 				$link . rpad(" "," ", 50-strlen($file)).
