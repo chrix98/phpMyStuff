@@ -3,7 +3,7 @@
 application/bootstrap.php
 *.komodoproject
 .komodotools
-index.php
+/index.php
 .htaccess
 application/config/database.php
 application/logs/
