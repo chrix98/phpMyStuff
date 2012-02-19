@@ -52,8 +52,6 @@ class Controller_Log extends Controller {
 
 		$this->log = LOG::instance();
 
-//		$this->log->add(LOG::INFO, " -- Starting");
-
 		if($this->g_truncate=='1')
 		{
 			if($fh = fopen($this->logfilename, 'w+'))	{
@@ -87,18 +85,18 @@ class Controller_Log extends Controller {
 
 	function action_index()
 	{
-		$this->log->add(LOG::INFO, __METHOD__.": entered");
+//		$this->log->add(LOG::INFO, __METHOD__.": entered");
 
-		LOG::instance()->add(LOG::DEBUG, __METHOD__.": logfile: ".var_export($this->logfilename,1));
+//		LOG::instance()->add(LOG::DEBUG, __METHOD__.": logfile: ".var_export($this->logfilename,1));
 
 		if(file_exists($this->logfilename) && is_readable($this->logfilename))	{
-			$this->log->add(LOG::INFO, __METHOD__.": we use log file" );
+//			$this->log->add(LOG::INFO, __METHOD__.": we use log file" );
 			$file = file_get_contents($this->logfilename);
 			$fileoutput = $this->_parse_file($file);
 		}else{
-			$this->log->add(LOG::DEBUG, __METHOD__.": listing files" );
+//			$this->log->add(LOG::DEBUG, __METHOD__.": listing files" );
 			$fileoutput = $this->_list_files();
-			$this->log->add(LOG::DEBUG, __METHOD__.": ...".var_export($fileoutput,1) );
+//			$this->log->add(LOG::DEBUG, __METHOD__.": ...".var_export($fileoutput,1) );
 		}
 
 		$this->show($fileoutput);
@@ -148,8 +146,8 @@ class Controller_Log extends Controller {
 
 	function _read_log_files($dir)
 	{
-		$this->log = LOG::instance();
-		$this->log->add(LOG::INFO, __METHOD__.": entered with dir: :dir", array(':dir'=>$dir) );
+//		$this->log = LOG::instance();
+//		$this->log->add(LOG::INFO, __METHOD__.": entered with dir: :dir", array(':dir'=>$dir) );
 
 		$ret = array();
 		if( "/" != substr($dir, -1))
@@ -158,53 +156,53 @@ class Controller_Log extends Controller {
 		if (is_dir($dir))	{
 			if ($dh = opendir($dir))	{
 				while ((($file = readdir($dh)) !== false)	) {
-					LOG::instance()->add(LOG::DEBUG, __METHOD__.": found file: ".var_export($file,1));
+//					LOG::instance()->add(LOG::DEBUG, __METHOD__.": found file: ".var_export($file,1));
 
 					if(in_array($file, $this->disallowed_files))
 						continue;
 
 					if(preg_match(LOG_FILE_REGEX, $file) )	{
-						LOG::instance()->add(LOG::DEBUG, __METHOD__.": file matches LOG_FILE_REGEX: ".var_export(LOG_FILE_REGEX,1));
+//						LOG::instance()->add(LOG::DEBUG, __METHOD__.": file matches LOG_FILE_REGEX: ".var_export(LOG_FILE_REGEX,1));
 						$ret[] = $dir.$file;
 
 					}elseif(is_dir($dir.$file))	{
-						LOG::instance()->add(LOG::DEBUG, __METHOD__.": file is a dir - reading contents ...");
+//						LOG::instance()->add(LOG::DEBUG, __METHOD__.": file is a dir - reading contents ...");
 
 						if($tmp = $this->_read_log_files($dir.$file))	{
-							LOG::instance()->add(LOG::DEBUG, __METHOD__.": dirs subcontent: ".var_export($tmp,1));
+//							LOG::instance()->add(LOG::DEBUG, __METHOD__.": dirs subcontent: ".var_export($tmp,1));
 							$ret = array_merge($ret, $tmp);
 							unset($tmp);
 						}
 					}else
 					{
-						LOG::instance()->add(LOG::DEBUG, __METHOD__.": file not a dir and not matching regex ".$file);
+//						LOG::instance()->add(LOG::DEBUG, __METHOD__.": file not a dir and not matching regex ".$file);
 					}
 				}
 				closedir($dh);
 
 			}else{
-				LOG::instance()->add(LOG::DEBUG, __METHOD__.": can not read directory: ".var_export($dir,1));
+//				LOG::instance()->add(LOG::DEBUG, __METHOD__.": can not read directory: ".var_export($dir,1));
 			}
 		}else{
 			//echo "no dir?";
-			LOG::instance()->add(LOG::DEBUG, __METHOD__.": not a directory: ".var_export($dir,1));
+//			LOG::instance()->add(LOG::DEBUG, __METHOD__.": not a directory: ".var_export($dir,1));
 		}
 
 		if(count($ret)<1)
 			$ret = false;
 
-		LOG::instance()->add(LOG::DEBUG, __METHOD__.": finished, returning: ".var_export($ret,1));
+//		LOG::instance()->add(LOG::DEBUG, __METHOD__.": finished, returning: ".var_export($ret,1));
 		return $ret;
 	}
 
 	function _list_files()
 	{
-		$this->log->add(LOG::INFO, __METHOD__.": entered" );
+//		$this->log->add(LOG::INFO, __METHOD__.": entered" );
 
 		$logfiles = $this->_read_log_files($this->logdir);
 		if(!$logfiles || !is_array($logfiles) || !count($logfiles))
 		{
-			LOG::instance()->add(LOG::DEBUG, __METHOD__.": No log files ? ".var_export($logfiles,1));
+//			LOG::instance()->add(LOG::DEBUG, __METHOD__.": No log files ? ".var_export($logfiles,1));
 			return false;
 		}
 
