@@ -7,9 +7,18 @@
       </ul>
       <br style="clear:both;">
    </div>
-   <h1><?php echo __('User profile') ?></h1>
+   <?
+   //print("<pre>"); var_dump($avatar); exit();
+   ?>
+   <h1>
+   	  <div class="avatar" style="float: left; margin: 5px 7px 0 0px;">
+  		<img src="<?php echo $avatar ?>" border="1" width="62" height="62" >
+      </div>
+   	  <?php echo __('User profile') ?>
+   </h1>
    <div class="content">
-      <p class="intro"><?= __('This is your user information, :username .', array(':username'=> $user->username )) ?></p>
+      <p class="intro">
+      <?= __('This is your user information, :username .', array(':username'=> $user->username )) ?></p>
 
       <h2><?= __('Username & Email Address'); ?></h2>
       <p><?php echo $user->username ?> &mdash; <?php echo $user->email ?></p>

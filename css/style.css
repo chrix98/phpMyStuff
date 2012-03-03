@@ -8,7 +8,7 @@ html {
 }
 body {
    font-family: Arial,Helvetica,Sans-serif;
-   margin: 0px;
+   margin: 0px 0px 50px;
 }
 
 /* Page */
@@ -130,13 +130,22 @@ p {
      border:solid 1px #de888a; background:#ffdddd;
    }
    /** When IE6 dies, replace with element-specifics. This is supposed to apply to only text, password and file. **/
-   input.text, input.password, input.file {
+   input.text, input.password {
       border:1px solid #DEDEDE;
       color:#525151;
-      font-size:20px;
+      /*font-size:20px;*/
       height:30px;
       padding:2px 0 0 5px;
       width:420px;
+      margin-bottom:10px;
+   }
+   input.file {
+      /*border:1px solid #DEDEDE;*/
+      color:#525151;
+      /*font-size:20px;*/
+      height:30px;
+      padding:2px 0 0 5px;
+      width:358px;
       margin-bottom:10px;
    }
    select {

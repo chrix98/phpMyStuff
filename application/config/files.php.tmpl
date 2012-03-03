@@ -1,0 +1,21 @@
+<?php defined('SYSPATH') or die('No direct script access.');
+
+return array(
+	#	RootDirs : FileType
+	'dir_userfiles'		=>	DOCROOT."userfiles/",
+	'dir_groupfiles'	=>	DOCROOT."groupfiles/",
+	'dir_sharedfiles'	=>	DOCROOT."sharefiles/",
+
+	#	Temporary Upload dirs
+	'dir_uploads'		=>	Upload::$default_directory,
+	'avatar_uploads'	=>	Upload::$default_directory."/avatars/",
+	'picture_uploads'	=>	Upload::$default_directory."/pictures/",
+	'photo_uploads'		=>	Upload::$default_directory."/photos/",
+	'music_uploads'		=>	Upload::$default_directory."/music/",
+	'video_uploads'		=>	Upload::$default_directory."/videos/",
+	'document_uploads'	=>	Upload::$default_directory."/documents/",
+
+	#	prefixes
+	'prefix_dir_user'	=>	'user_',
+	'prefix_dir_group'	=>	'group_',
+);

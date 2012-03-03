@@ -32,41 +32,45 @@ class Controller_Welcome extends Controller_App {
 	public function action_index()
 	{
 		$id = $this->request->param('id');
-		LOG::instance()->add(LOG::DEBUG, 'entered with : id: '.var_export($id,1));
-
-		$xtc = $this->request->param('xtc');
-		LOG::instance()->add(LOG::DEBUG, 'entered with : xtc: '.var_export($xtc,1));
-
-		$this->log = LOG::instance();
-
-		$this->log->add(LOG::DEBUG, __METHOD__.": entered with args: ");
-		$this->log->add(LOG::INFO, __METHOD__.": info entry: ");
-
-		//Message::add('info', 'hello, world!');
+		$bm = DebugHelper::func_open(__METHOD__ , __LINE__, $id);
 
 		$userAuth = Auth::instance();
 		$user = $userAuth->get_user();
-		$userDataModel = Model_Auth_User::factory('User', $user);
-		$userData = $userDataModel->as_array();
 
-		$userAuthStatus = $userAuth->logged_in() ? 'out' : 'in';
-		$userAuthStatusLabel = "Log".$userAuthStatus;	// todo 2 -o chris -c msgbases: fix up
+		if($userAuth->logged_in()){
+			DebugHelper::ilog(__METHOD__, __LINE__, "user is logged in");
+			$userAuthStatus = 'in';
+			$userAuthLink = URL::current().'/user/logout';	//	to toggle login status
+			$userAuthStatusLabel = __('Logged in');
+		}else{
+			DebugHelper::ilog(__METHOD__, __LINE__, "user is not logged in");
+			$userAuthStatus = 'out';
+			$userAuthLink = URL::current().'/user/login';	//	to toggle login status
+			$userAuthStatusLabel = __('not logged in');
+		}
 
 
 		switch($userAuthStatus)
 		{
-			case 'in':
-				$this->template->session_link = '<a href="'.URL::current().'/user/log'.$userAuthStatus.'">'.$userAuthStatusLabel.'</a>';
+			case 'out':
+				$this->template->session_link = '<a href="'.$userAuthLink.'">'.$userAuthStatusLabel.'</a>';
 
 				$this->template->content = __("You're not logged in");
 			break;
-			case 'out':
-				$this->template->session_link = '<a href="'.URL::current().'/user/log'.$userAuthStatus.'">'.$userAuthStatusLabel.'</a>';
-				$this->template->content = __('Welcome back :first_name :last_name', array(':first_name' => $userData['first_name'], ':last_name'=>$userData['last_name']));
+			case 'in':
+				$this->template->session_link = '<a href="'.$userAuthLink.'">'.$userAuthStatusLabel.'</a>';
+				$this->template->content = __(
+					'Welcome back :first_name :last_name',
+					array(
+						':first_name' 	=> $user->first_name,
+						':last_name'	=> $user->last_name
+					)
+				);
 			default:
 			break;
 		}
 
+		DebugHelper::func_close(__METHOD__ , __LINE__ , $bm);
 	}
 
 } // End Welcome

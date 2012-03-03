@@ -7,7 +7,7 @@ if(isset($data)) {
    unset($data['password']);
    $form->values = $data;
 }
-echo $form->open('user/profile_edit');
+echo $form->open('user/profile_edit', array('enctype' => 'multipart/form-data'));
 ?>
 <div class="block">
    <h1><?php echo __('Edit profile'); ?></h1>
@@ -15,6 +15,24 @@ echo $form->open('user/profile_edit');
    <ul>
       <li><label><?php echo __('Username'); ?></label></li>
       <?php echo $form->input('username', null, array('info' => __('Length between 4-32 characters. Letters, numbers, dot and underscore are allowed characters.'))); ?>
+
+      <li>
+   	  <div class="avatar" style="float: left; margin: 5px 7px 0 0px;">
+  		<img src="<?php echo $avatar ?>" border="1" width="62" height="62" >
+      </div>
+
+      <label><?php echo __('Avatar'); ?></label></li>
+      <?php
+      	echo $form->hidden('avatar_id[provider]','file');
+      	echo $form->file(
+      		'avatar_data_file',
+      		array(
+      			'info' 	=> __('Add your avatar here'),
+      			'class'	=> 'file',
+
+      		)
+      	);
+      ?><br />
       <li><label><?php echo __('First name'); ?></label></li>
       <?php echo $form->input('first_name') ?>
       <li><label><?php echo __('Last name'); ?></label></li>
@@ -24,7 +42,7 @@ echo $form->open('user/profile_edit');
       <li><label><?php echo __('Password'); ?></label></li>
       <?php echo $form->password('password', null, array('info' => __('Password should be between 6-42 characters.'))) ?>
       <li><label><?php echo __('Re-type Password'); ?></label></li>
-      <?php echo $form->password('password_confirm') ?>
+      <?php echo $form->password('password_confirm', null, array('info' => __('Only needed for password changes.'))) ?>
       <li><h2><?php echo __('Roles'); ?></h2></li>
       <li><table class="content">
          <tr class="heading"><td><?php echo __('Role'); ?></td><td><?php echo __('Description'); ?></td></tr>
