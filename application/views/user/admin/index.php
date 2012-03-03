@@ -24,7 +24,7 @@ foreach ($users as $user) {
    $row = $user->as_array();
    // reformat dates
    $row['created'] = Helper_Format::friendly_datetime($row['created']);
-   $row['modified'] = Helper_Format::friendly_datetime($row['modified']);
+   $row['updated'] = Helper_Format::friendly_datetime($row['updated']);
    $row['last_login'] = Helper_Format::relative_time($row['last_login']);
 //   $row['last_failed_login'] = Helper_Format::relative_time(strtotime($row['last_failed_login']));
    // add actions

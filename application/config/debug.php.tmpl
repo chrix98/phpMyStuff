@@ -1,0 +1,27 @@
+<?php defined('SYSPATH') or die('No direct script access.');
+/**
+* @see /system/classes/kohana/log.php
+*
+*	// Log message levels - Windows users see PHP Bug #18090
+*	const EMERGENCY = LOG_EMERG;    // 0
+*	const ALERT     = LOG_ALERT;    // 1
+*	const CRITICAL  = LOG_CRIT;     // 2
+*	const ERROR     = LOG_ERR;      // 3
+*	const WARNING   = LOG_WARNING;  // 4
+*	const NOTICE    = LOG_NOTICE;   // 5
+*	const INFO      = LOG_INFO;     // 6
+*	const DEBUG     = LOG_DEBUG;    // 7
+*	const STRACE    = 8;
+*/
+
+
+return array(
+	'threshold'	=>	0,				//	up to what level should be logged?
+	'filter'	=>	array(			//	what would you like to filter by?
+		'REMOTE_ADDR'	=>	null,	//	filters values are validated by preg_match
+		'HTTP_HOST'		=>	null,
+		'URI'			=>	null,
+		'PATH'			=>	null,
+		'METHOD'		=>	null
+	),
+);

@@ -36,8 +36,6 @@ class Controller_Welcome extends Controller_App {
 
 		$userAuth = Auth::instance();
 		$user = $userAuth->get_user();
-		$userDataModel = Model_Auth_User::factory('User', $user);
-		$userData = $userDataModel->as_array();
 
 		if($userAuth->logged_in()){
 			DebugHelper::ilog(__METHOD__, __LINE__, "user is logged in");
@@ -61,7 +59,13 @@ class Controller_Welcome extends Controller_App {
 			break;
 			case 'in':
 				$this->template->session_link = '<a href="'.$userAuthLink.'">'.$userAuthStatusLabel.'</a>';
-				$this->template->content = __('Welcome back :first_name :last_name', array(':first_name' => $userData['first_name'], ':last_name'=>$userData['last_name']));
+				$this->template->content = __(
+					'Welcome back :first_name :last_name',
+					array(
+						':first_name' 	=> $user->first_name,
+						':last_name'	=> $user->last_name
+					)
+				);
 			default:
 			break;
 		}

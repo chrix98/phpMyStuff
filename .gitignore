@@ -15,4 +15,7 @@ application/config/pagination.php
 application/config/purifier.php
 application/config/useradmin.php
 application/i18n/*_*.php
-
+uploads/avatars/
+userfiles/user_[0-9]*
+application/config/debug.php
+application/config/files.php

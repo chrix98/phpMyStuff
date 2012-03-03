@@ -33,10 +33,10 @@ class Useradmin_Controller_User extends Controller_App {
 	 */
 	public $secure_actions = array(
 		// user actions
-		'index' => 'login', 
-		'profile' => 'login', 
-		'profile_edit' => 'login', 
-		'unregister' => 'login', 
+		'index' => 'login',
+		'profile' => 'login',
+		'profile_edit' => 'login',
+		'unregister' => 'login',
 		'change_password' => 'login'
 	); // the others are public (forgot, login, register, reset, noaccess)
 	// logout is also public to avoid confusion (e.g. easier to specify and test post-logout page)
@@ -63,7 +63,7 @@ class Useradmin_Controller_User extends Controller_App {
         }
 
         parent::before();
-        
+
     }
 
 	// USER SELF-MANAGEMENT
@@ -108,6 +108,10 @@ class Useradmin_Controller_User extends Controller_App {
 		$view = $this->template->content = View::factory('user/profile');
 		// retrieve the current user and set the view variable accordingly
 		$view->set('user', Auth::instance()->get_user());
+
+		//	adding the avatar information
+		$view->set('avatar', Orm::factory('avatar', Auth::instance()->get_user()->avatar_id)->get_avatar_url());
+
 	}
 
 	/**
@@ -131,14 +135,17 @@ class Useradmin_Controller_User extends Controller_App {
 			}
 			try
 			{
-				$user->update_user($_POST, 
-				array(
-					'username', 
-					'password', 
-					'email',
-					'first_name',
-					'last_name'
-				));
+				$user->update_user($_POST,
+					array(
+						'username',
+						'password',
+						'email',
+						'first_name',
+						'last_name',
+						'avatar_id'
+					)
+				);
+
 				// message: save success
 				Message::add('success', __('Values saved.'));
 				// redirect and exit
@@ -162,6 +169,9 @@ class Useradmin_Controller_User extends Controller_App {
 		{
 			// load the information for viewing
 			$view->set('data', $user->as_array());
+			//	adding the avatar information
+			$view->set('avatar', Orm::factory('avatar', Auth::instance()->get_user()->avatar_id)->get_avatar_url());
+
 		}
 		// retrieve roles into array
 		$roles = array();
@@ -205,9 +215,9 @@ class Useradmin_Controller_User extends Controller_App {
 			if (Kohana::$config->load('useradmin')->captcha)
 			{
 				$recaptcha_resp = recaptcha_check_answer(
-					$recaptcha_config['privatekey'], 
-					$_SERVER['REMOTE_ADDR'], 
-					$_POST['recaptcha_challenge_field'], 
+					$recaptcha_config['privatekey'],
+					$_SERVER['REMOTE_ADDR'],
+					$_POST['recaptcha_challenge_field'],
 					$_POST['recaptcha_response_field']
 				);
 				if (! $recaptcha_resp->is_valid)
@@ -368,7 +378,7 @@ class Useradmin_Controller_User extends Controller_App {
 				$view->set('username', htmlspecialchars($_GET['username']));
 			}
 			$providers = Kohana::$config->load('useradmin.providers');
-			$view->set('facebook_enabled', 
+			$view->set('facebook_enabled',
 			isset($providers['facebook']) ? $providers['facebook'] : false);
 			$this->template->content = $view;
 		}
@@ -419,9 +429,9 @@ class Useradmin_Controller_User extends Controller_App {
 				$to = $_POST['reset_email'];
 				$from = Kohana::$config->load('useradmin')->email_address;
 				$body = __($message, array(
-					':reset_token_link' => URL::site('user/reset?reset_token='.$user->reset_token.'&reset_email='.$_POST['reset_email'], TRUE), 
-					':reset_link' => URL::site('user/reset', TRUE), 
-					':reset_token' => $user->reset_token, 
+					':reset_token_link' => URL::site('user/reset?reset_token='.$user->reset_token.'&reset_email='.$_POST['reset_email'], TRUE),
+					':reset_link' => URL::site('user/reset', TRUE),
+					':reset_token' => $user->reset_token,
 					':username' => $user->username
 				));
 				// FIXME: Test if Swift_Message has been found.
@@ -436,7 +446,7 @@ class Useradmin_Controller_User extends Controller_App {
 					Message::add('failure', __('Could not send email.'));
 				}
 			}
-			else 
+			else
 				if ($user->username == 'admin')
 				{
 					Message::add('error', __('Admin account password cannot be reset via email.'));
@@ -476,7 +486,7 @@ class Useradmin_Controller_User extends Controller_App {
 				{
 					Message::add('failure', __('The admin password cannot be reset by email.'));
 				}
-				else 
+				else
 					if (is_numeric($user->id) && ( $user->reset_token == $_REQUEST['reset_token'] ))
 					{
 						$password = $user->generate_password();
@@ -485,10 +495,10 @@ class Useradmin_Controller_User extends Controller_App {
 						//               $user->failed_login_count = 0;
 						$user->save();
 						Message::add('success', __('Password reset.'));
-						Message::add('success', '<p>' 
-						                      . __('Your password has been reset to: ":password".', array(':password' => $password)) 
-						                      . '</p><p>' 
-						                      . __('Please log in below.') 
+						Message::add('success', '<p>'
+						                      . __('Your password has been reset to: ":password".', array(':password' => $password))
+						                      . '</p><p>'
+						                      . __('Please log in below.')
 						                      . '</p>'
 						);
 						$this->request->redirect('user/login?username=' . $user->username);
@@ -515,7 +525,7 @@ class Useradmin_Controller_User extends Controller_App {
 			// editing requires that the username and email do not exist (EXCEPT for this ID)
 			// If the post data validates using the rules setup in the user model
 			$param_by_ref = array(
-				'password' => $_POST['password'], 
+				'password' => $_POST['password'],
 				'password_confirm' => $_POST['password_confirm']
 			);
 			$validate = $user->change_password($param_by_ref, FALSE);
@@ -605,7 +615,7 @@ class Useradmin_Controller_User extends Controller_App {
 					return;
 				}
 			}
-			else 
+			else
 				if (isset($_POST['confirmation']))
 				{
 					Message::add('error', 'Please click Yes to confirm associating the account.');
@@ -734,8 +744,8 @@ class Useradmin_Controller_User extends Controller_App {
 					// get a unused username like firstname.surname or firstname.surname2 ...
 					'username' => $user->generate_username(
 						str_replace(' ', '.', $provider->name())
-					), 
-					'password' => $password, 
+					),
+					'password' => $password,
 					'password_confirm' => $password
 				);
 				if (Valid::email($provider->email(), TRUE))
@@ -746,8 +756,8 @@ class Useradmin_Controller_User extends Controller_App {
 				{
 					// If the post data validates using the rules setup in the user model
 					$user->create_user($values, array(
-						'username', 
-						'password', 
+						'username',
+						'password',
 						'email'
 					));
 					// Add the login role to the user (add a row to the db)

@@ -18,14 +18,24 @@
 						echo '<li class="left">'.Html::anchor('/', __('Home')).'</li>';
 
              if (Auth::instance()->logged_in()){
-							if(Auth::instance()->logged_in('admin')){
-								echo '<li class="right">'.Html::anchor('admin_user', __('User Admin')).'</li>';
-							}
-							echo '<li class="right">'.Html::anchor('user/logout', __('Log out')).'</li>';
-							echo '<li class="right">'.Html::anchor('user/profile', __('My profile')).'</li>';
+			 	$avatarUrl = Orm::factory('avatar', Auth::instance()->get_user()->avatar_id )->get_avatar_url();
+			 	$sUserFirstName	= Auth::instance()->get_user()->first_name;
+			 	$sUserLastName 	= Auth::instance()->get_user()->last_name;
+
+				if(Auth::instance()->logged_in('admin')){
+					echo '<li class="right">'.Html::anchor('admin_user', __('User Admin')).'</li>';
+				}
+				echo '<li class="right">'.Html::anchor('user/logout', __('Log out')).'</li>';
+
+				$img = sprintf(
+					"<img src='%s' border=0 width=30 height=30 style='float:left; margin: 5px; 5px;'>",
+					$avatarUrl
+				);
+
+				echo '<li class="right">'.Html::anchor('user/profile', $img." ".$sUserFirstName." ".$sUserLastName).'</li>';
              } else {
-							echo '<li class="right">'.Html::anchor('user/register', __('Register')).'</li>';
-							echo '<li class="right">'.Html::anchor('user/login', __('Log in')).'</li>';
+				echo '<li class="right">'.Html::anchor('user/register', __('Register')).'</li>';
+				echo '<li class="right">'.Html::anchor('user/login', __('Log in')).'</li>';
              }
            ?>
          </ul>
@@ -46,7 +56,9 @@
    </div>
 </div>
 
-<?=$profile?>
+<?php if(KOHANA::$profiling === TRUE)
+	echo View::factory('profiler/stats')
+?>
 
 </body>
 </html>
