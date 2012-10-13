@@ -46,8 +46,9 @@ class Useradmin_Controller_User extends Controller_App {
         $siteUrl = substr(Url::site(),1,-1);//strip leading/trailing slashes
 
         if(substr($this->request->referrer(),0,strlen($baseUrl)) == $baseUrl){
-            $urlPath = ltrim(parse_url($this->request->referrer(),PHP_URL_PATH),'/');
-            $urlPath = str_replace($siteUrl, '', $urlPath);
+            //$urlPath = ltrim(parse_url($this->request->referrer(),PHP_URL_PATH),'/');
+	    $urlPath = ltrim(substr($this->request->referrer(), strlen(Url::base(true))),'/');
+	    $urlPath = str_replace($siteUrl, '', $urlPath);
 
             $processedRef = Request::process_uri($urlPath);
             $referrerController = Arr::path(
@@ -494,11 +495,11 @@ class Useradmin_Controller_User extends Controller_App {
 						// This field does not exist in the default config:
 						//               $user->failed_login_count = 0;
 						$user->save();
-						Message::add('success', __('Password reset.'));
-						Message::add('success', '<p>'
-						                      . __('Your password has been reset to: ":password".', array(':password' => $password))
-						                      . '</p><p>'
-						                      . __('Please log in below.')
+						//Message::add('success', __('Password reset.'));
+						Message::add('success', '<p>' 
+						                      . __('Your password has been reset to: ":password".', array(':password' => $password)) 
+						                      . '</p><p>' 
+						                      . __('Please log in below.') 
 						                      . '</p>'
 						);
 						$this->request->redirect('user/login?username=' . $user->username);
@@ -561,8 +562,7 @@ class Useradmin_Controller_User extends Controller_App {
 	 */
 	function action_provider ($provider_name = null)
 	{
-		if(!$provider_name = $this->request->param('provider'))
-			$provider_name = null;
+		$provider_name = $this->request->param('provider', $provider_name);
 
 		if (Auth::instance()->logged_in())
 		{
@@ -571,7 +571,6 @@ class Useradmin_Controller_User extends Controller_App {
 			$this->request->redirect('user/profile');
 		}
 		$provider = Provider::factory($provider_name);
-
 		if ($this->request->query('code') && $this->request->query('state'))
 		{
 			$this->action_provider_return($provider_name);
@@ -590,14 +589,13 @@ class Useradmin_Controller_User extends Controller_App {
 
 	function action_associate($provider_name = null)
 	{
-		if(!$provider_name = $this->request->param('id'))
-			$provider_name = null;
-
-	if ($this->request->query('code') && $this->request->query('state'))
-	{
-		$this->action_associate_return($provider_name);
-		return;
-	}
+		$provider_name = $this->request->param('provider', $provider_name);
+		
+		if ($this->request->query('code') && $this->request->query('state'))
+		{
+			$this->action_associate_return($provider_name);
+			return;
+		}
 		if (Auth::instance()->logged_in())
 		{
 			if (isset($_POST['confirmation']) && $_POST['confirmation'] == 'Y')
@@ -653,8 +651,7 @@ class Useradmin_Controller_User extends Controller_App {
 	 */
 	function action_associate_return($provider_name = null)
 	{
-		if(!$provider_name = $this->request->param('id'))
-			$provider_name = null;
+		$provider_name = $this->request->param('provider', $provider_name);
 
 		if (Auth::instance()->logged_in())
 		{
@@ -700,10 +697,8 @@ class Useradmin_Controller_User extends Controller_App {
 	 */
 	function action_provider_return($provider_name = null)
 	{
-		if(!$provider_name = $this->request->param('id'))
-			$provider_name = null;
-
-
+		$provider_name = $this->request->param('provider', $provider_name);
+		
 		$provider = Provider::factory($provider_name);
 		if (! is_object($provider))
 		{
@@ -778,6 +773,13 @@ class Useradmin_Controller_User extends Controller_App {
 				}
 				catch (ORM_Validation_Exception $e)
 				{
+					/*
+					 * Redirect back to the front page in case they
+					 * try to create another account with a separate provider
+					 */
+					Message::add('error', 'A matching account already exists with another provider. Please select another login or registration method.');
+					$this->request->redirect('user/login');
+					
 					if ($provider_name == 'twitter')
 					{
 						Message::add('error', 'The Twitter API does not support retrieving your email address; you will have to enter it manually.');

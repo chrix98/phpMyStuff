@@ -130,6 +130,7 @@ class Model_Avatar extends ORM {
 		DebugHelper::func_close(__METHOD__, __LINE__, $bm, $ret);
 		return $ret;
 	}
+
 	/************************************
 	* cruds
 	**/
@@ -162,6 +163,7 @@ class Model_Avatar extends ORM {
 		$bm = DebugHelper::func_open(__METHOD__, __LINE__,$oAvatar);
 		$ret = false;
 		$set = false;
+
 
 		foreach ($oAvatar as $key => $value) {
 			if(!empty($value)) {

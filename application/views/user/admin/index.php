@@ -37,12 +37,20 @@ foreach ($users as $user) {
    // remove last comma
    $row['role'] = substr($row['role'], 0, -2);
    // add provider icons
+<<<<<<< HEAD
+=======
+   
+>>>>>>> develop
    if(!empty($providers)) {
       $row['identities'] = '';
       $identities = $user->user_identity->find_all();
       if($identities->count() > 0) {
          foreach($identities as $identity) {
+<<<<<<< HEAD
             $row['identities'] .= '<img src="/img/tiny/'.$identity->provider.'.png"> ';
+=======
+            $row['identities'] .= '<img src="img/tiny/'.$identity->provider.'.png"> ';
+>>>>>>> develop
          }
       }
    }
