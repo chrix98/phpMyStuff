@@ -5,7 +5,7 @@
  * @package    Useradmin/Auth
  */
 class Useradmin_Model_User extends Model_Auth_User {
-
+	
 	/**
 	 * A user has many tokens and roles
 	 *
@@ -14,14 +14,14 @@ class Useradmin_Model_User extends Model_Auth_User {
 	protected $_has_many = array(
 		// auth
 		'roles' => array('through' => 'roles_users'),
-		'user_tokens' 	=> array(),
+		'user_tokens' => array(),
 		// for facebook / twitter / google / yahoo identities
 		'user_identity' => array(),
 	);
-
+	
 	protected $_has_one= array(
 	);
-
+	
 	protected $_created_column = array('column' => 'created', 'format' => 'Y-m-d H:i:s');
 	protected $_updated_column = array('column' => 'updated', 'format' => 'Y-m-d H:i:s');
 
@@ -36,7 +36,10 @@ class Useradmin_Model_User extends Model_Auth_User {
 	 */
 	public function rules()
 	{
-		return parent::rules();
+		$parent = parent::rules();
+		// fixes the min_length username value
+		$parent['username'][1] = array('min_length', array(':value', 1));
+		return $parent;
 	}
 
 	/**

@@ -32,7 +32,7 @@ class Useradmin_Provider_Facebook extends Provider {
 		return $this->facebook->getLoginUrl(array(
 			'next'       => URL::site($return_url, true), 
 			'cancel_url' => URL::site($return_url, true), 
-			'req_perms'  => 'email'
+			'scope'  => 'email'
 		));
 	}
 
@@ -41,8 +41,9 @@ class Useradmin_Provider_Facebook extends Provider {
 	 * @return bool
 	 */
 	public function verify()
-	{
-		if ($this->facebook->getSession())
+	{ 
+		//if ($this->facebook->getSession())
+		if ($this->facebook->getUser())
 		{
 			try
 			{
