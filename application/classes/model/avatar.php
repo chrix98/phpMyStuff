@@ -130,6 +130,8 @@ class Model_Avatar extends ORM {
 		DebugHelper::func_close(__METHOD__, __LINE__, $bm, $ret);
 		return $ret;
 	}
+
+
 	/************************************
 	* cruds
 	**/
@@ -163,6 +165,7 @@ class Model_Avatar extends ORM {
 		$ret = false;
 		$set = false;
 
+		// todo 2 -o chris -c fixme : implement rules or some form of checking
 		foreach ($oAvatar as $key => $value) {
 			if(!empty($value)) {
 				$this->$key = $value;

@@ -35,7 +35,7 @@
       if($identities->count() > 0) {
          echo '<h2>'.__('Accounts associated with your user profile').'</h2><p>';
          foreach($identities as $identity) {
-            echo '<a class="associated_account" style="background: #FFF url(/img/small/'.$identity->provider.'.png) no-repeat center center"></a>';
+            echo '<a class="associated_account" style="background: #FFF url(../img/small/'.$identity->provider.'.png) no-repeat center center"></a>';
             unset($providers[$identity->provider]);
          }
          echo '<br style="clear: both;"></p>';

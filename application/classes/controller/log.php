@@ -72,7 +72,8 @@ class Controller_Log extends Controller {
 		}
 		elseif($this->g_delete=='2')
 		{
-			$logfiles = _read_log_files();
+			$logfiles = $this->_read_log_files();
+
 			if(is_array($logfiles) && count($logfiles))
 			{
 				foreach($logfiles as $file)
@@ -150,13 +151,18 @@ class Controller_Log extends Controller {
 		return $fileoutput;
 	}
 
-	function _read_log_files($dir)
+	function _read_log_files($dir=null)
 	{
 		$ret = array();
+
+		if(FALSE === strpos($dir, APPPATH."logs")) {
+			$dir = APPPATH."logs/".$dir;
+		}
+
 		if( "/" != substr($dir, -1))
 			$dir .= "/";
 
-		if (is_dir($dir))	{
+		if (is_dir($dir) && is_readable($dir))	{
 			if ($dh = opendir($dir))	{
 				while ((($file = readdir($dh)) !== false)	) {
 					if(in_array($file, $this->disallowed_files))
