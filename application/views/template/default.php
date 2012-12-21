@@ -18,6 +18,9 @@
 						echo '<li class="left">'.Html::anchor('/', __('Home')).'</li>';
 
              if (Auth::instance()->logged_in()){
+
+			   echo '<li class="left">'.Html::anchor('/file', __('Files')).'</li>';
+
 			 	$avatarUrl = Orm::factory('avatar', Auth::instance()->get_user()->avatar_id )->get_avatar_url();
 			 	$sUserFirstName	= Auth::instance()->get_user()->first_name;
 			 	$sUserLastName 	= Auth::instance()->get_user()->last_name;
@@ -49,7 +52,7 @@
    <div id="footer">
    	<ul class="menu">
 		<li class="left"><?= HTML::anchor('copyright', '&copy; 2011 Chris Petermann'); ?></li>
-		<li class="left"><?= HTML::anchor('about', __('About')); ?></li>
+		<li class="left"><?= HTML::anchor('welcome/about', __('About')); ?></li>
 		<li class="left"><?= HTML::anchor('contact', __('Contact')); ?></li>
 		<li class="right"><?= LANGUAGES::lang_changer(); ?></li>
    	</ul>

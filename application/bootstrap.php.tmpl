@@ -129,6 +129,7 @@ if(!in_array($lang, Kohana::$config->load('languages.valid_languages'))) {
 Cookie::set('lang', $lang);
 I18n::lang($lang);
 
+Upload::$default_directory = 'uploads';
 
 /**
  * Set the routes. Each route must have a minimum of a name, a URI and a set of

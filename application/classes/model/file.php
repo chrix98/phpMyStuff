@@ -178,10 +178,11 @@ class Model_File extends ORM
 			DebugHelper::dlog(__METHOD__, __LINE__, "Anonymous access denied");
 			Message::add('auth', 'Anonymous users can not upload files');
 			Url::redirect(Url::base()."/auth/login");
-		}
+		}else{
 
-		$this->user = Auth::instance()->get_user();
-		$this->check_user_dirs();
+            $this->user = Auth::instance()->get_user();
+            $this->check_user_dirs();
+        }
 
 		parent::__construct($id);
 	}
@@ -225,7 +226,9 @@ class Model_File extends ORM
 	{
 		$bm = DebugHelper::func_open(__METHOD__, __LINE__, null);
 		$dir_userfiles = $this->fileconfig->get('dir_userfiles');
-		$home_dir = $this->fileconfig->get('dir_userfiles').$this->fileconfig->get('prefix_dir_user').$this->user->id."/";
+		$home_dir = $this->fileconfig->get('dir_userfiles')
+                        .$this->fileconfig->get('prefix_dir_user')
+                        .$this->user->id."/";
 
 		if(!file_exists($home_dir)) {
 			DebugHelper::dlog(__METHOD__, __LINE__, "homedir doesn't exist ...");

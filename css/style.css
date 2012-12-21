@@ -375,6 +375,7 @@ a { -moz-outline: none; }
   border-bottom-width: 5px;
   background-image: url("../img/boxbar-background.png");
   font-size: 13px;
+  border-radius: 8px 8px 8px 8px;
 }
 
 .submenu li.first a, .submenu ul li.first {
@@ -440,14 +441,19 @@ a { -moz-outline: none; }
    padding: 0 15px 15px;
 }
 .block h1 {
-   margin-left: 15px;
-   font-size: 22px;
+   font-size: 15pt;
    font-style: normal;
    font-weight: bold;
    text-transform: none;
    letter-spacing: -1px;
    line-height: 1.2em;
-   padding: 15px 0;
+
+  /*background: black;*/
+  color: #222222;
+  background-image: url("../img/boxbar-background.png");
+  border-radius: 8px 8px 8px 8px;
+  padding: 5px 13px;
+  margin-bottom: 10px;
 }
 
 /** FRONT PAGE BOX **/
@@ -485,10 +491,11 @@ a { -moz-outline: none; }
   -moz-border-radius-topright: 9px;
   -webkit-border-top-right-radius: 9px;
 
-  background: black;
-  color: #fff;
-
-  padding: 10px 23px;
+  /*background: black;*/
+  color: #222222;
+  background-image: url("../img/boxbar-background.png");
+  border-radius: 8px 8px 8px 8px;
+  padding: 5px 23px;
   margin: 0;
 
 }
