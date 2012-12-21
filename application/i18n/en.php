@@ -4,6 +4,12 @@
  * Automatically generated from previous translation file.
  */
 return array (
+  'Password must not be empty.' => 'Password must not be empty.',
+  'Forgot password' => 'Forgot password',
+  'Forgot password or username' => 'Forgot password or username',
+  'Please send me a link to reset my password.' => 'Please send me a link to reset my password.',
+  'Your email address:' => 'Your email address:',
+  'Reset password' => 'Reset password',
   'Identities' => 'Identities',
   'To register / log in using another account, please click your provider' => 'To register / log in using another account, please click your provider',
   'Accounts associated with your user profile' => 'Accounts associated with your user profile',
