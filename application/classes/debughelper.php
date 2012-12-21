@@ -17,6 +17,13 @@ class DebugHelper {
 
 	}
 
+	/**
+	 * creates a function opening debug entry and closes the benchmark for it
+	 * @param string method the name of the calling method, i.e. __METHOD__
+	 * @param integer line the line number of the calling row, i.e. __LINE__
+	 * @param any dumpvals, usually the return values
+	 * @return handle benchmark handle to be used in the func_close call
+	 */
 	public static function func_open()
 	{
 		if(self::enabled() === false) return;
@@ -28,7 +35,7 @@ class DebugHelper {
 		$parms	= $args;
 
 		self::dlog($method, $line, "===================================================");
-		self::dlog($method, $line, "========== entered".(!empty($parms)? " with args: " : ""), $parms);
+		self::dlog($method, $line, "========== entered ".(!empty($parms)? " with args: " : ""), $parms);
 		$benchmark = null;
 
 		// Be sure to only profile if it's enabled
@@ -42,6 +49,13 @@ class DebugHelper {
 		return $benchmark;
 	}
 
+	/**
+	 * creates a function closure debug entry and closes the benchmark for it
+	 * @param string method the name of the calling method, i.e. __METHOD__
+	 * @param integer line the line number of the calling row, i.e. __LINE__
+	 * @param handle benchmark the benchmark handle returned by func_open
+	 * @param any dumpvals, usually the return values
+	 */
 	public static function func_close()
 	{
 		$xargs = func_get_args();

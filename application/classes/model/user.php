@@ -35,8 +35,8 @@ class Model_User extends Useradmin_Model_User {
 	public function labels()
 	{
 		return parent::labels() + array(
-			'first_name'	=> 'first name',
-			'last_name'		=> 'last name',
+			'first_name'	=> __('first name'),
+			'last_name'		=> __('last name'),
 			//'avatar_id'		=> 'avatar?',
 		);
 	}

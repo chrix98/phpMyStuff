@@ -9,6 +9,7 @@ class URL extends Kohana_URL {
 
 	static function redirect($url)
 	{
-		header('Location : '.$url);
+		DebugHelper::ilog(__METHOD__,__LINE__,'redirecting to:' ,$url);
+		Request::current()->redirect($url);
 	}
 }

@@ -410,6 +410,7 @@ class Model_Avatar extends ORM {
 		$ret = false;
 
 		$results = $this->find_all()->as_array();
+		DebugHelper::dlog(__METHOD__, __LINE__, "results: ", $results);
 
 		foreach($results as $row=>$data) {
 			if(substr(md5($data->id), 10, 15) == $hash) {
