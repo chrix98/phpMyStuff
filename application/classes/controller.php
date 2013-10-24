@@ -12,14 +12,16 @@ abstract class Controller extends Kohana_Controller {
 	public function action_change_language()
 	{
 		$lang = $this->request->param('lang');
-		
+
 		$valid_languages = Kohana::$config->load('languages.valid_languages');
 
 		if(!in_array($lang, $valid_languages))	{
-			Log::instance()->add(LOG_DEBUG, 'chosen language invalid: '. var_export($lang,1));
+			//Log::instance()->add(LOG_DEBUG, 'chosen language invalid: '. var_export($lang,1));
+			DebugHelper::dlog('chosen language invalid: ', $lang);
 			$lang = Kohana::$config->load('languages.system_default_language');
 		}else{
-			Log::instance()->add(LOG_DEBUG, 'chosen language accepted.'. var_export($lang,1));
+			//Log::instance()->add(LOG_DEBUG, 'chosen language accepted.'. var_export($lang,1));
+			DebugHelper::dlog('chosen language accepted.', $lang);
 		}
 		Cookie::delete('lang');
 		Cookie::set('lang', $lang);

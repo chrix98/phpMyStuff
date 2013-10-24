@@ -27,15 +27,17 @@ class DebugHelper {
 	public static function func_open()
 	{
 		if(self::enabled() === false) return;
-		$xargs = func_get_args();
-		$args = $xargs;
 
-		$method = array_shift($args);
-		$line	= array_shift($args);
-		$parms	= $args;
+		$trace = debug_backtrace();
 
-		self::dlog($method, $line, "===================================================");
-		self::dlog($method, $line, "========== entered ".(!empty($parms)? " with args: " : ""), $parms);
+		$file	= $trace[0]['file']." => ".$trace[0]['line'];
+		$method = $trace[1]['class'].$trace[1]['type'].$trace[1]['function'];
+		$line	= $trace[0]['line'];
+		$parms	= $trace[1]['args'];
+
+		$newargs = array(LOG::DEBUG);
+		self::logger(array_merge($newargs, array($method, $line, "\t====== entered" . (!empty($parms) ? ' with args:':''), $parms) ));
+
 		$benchmark = null;
 
 		// Be sure to only profile if it's enabled
@@ -58,20 +60,26 @@ class DebugHelper {
 	 */
 	public static function func_close()
 	{
-		$xargs = func_get_args();
-		$args = $xargs;
+		if(self::enabled() === false) return;
 
-		$method 	= array_shift($args);
-		$line		= array_shift($args);
-		$benchmark	= array_shift($args);
-		$parms 		= $args;
+		$args	= func_get_args();
+
+		$trace 	= debug_backtrace();
+		$file	= $trace[0]['file']." => ".$trace[0]['line'];
+		$method = $trace[1]['class'].$trace[1]['type'].$trace[1]['function'];
+		$line	= $trace[0]['line'];
+		$parms	= $trace[1]['args'];
+
+		$benchmark = $args[0];
 
 		if(self::enabled() === false) return;
 		// stop the benchmark
 		if(!empty($benchmark))
 			Profiler::stop($benchmark);
 
-		self::dlog($method, $line, "========== finished".(null!==$parms? ", returning: " : ""), $parms);
+		//self::dlog($method, $line, "========== finished".(null!==$parms? ", returning: " : ""), $parms);
+		$newargs = array(LOG::DEBUG);
+		self::logger(array_merge($newargs, array($method, $line, "\t====== finished". (!empty($parms) ? ', returning:' : ''),$parms)));
 	}
 
 	/**
@@ -85,8 +93,15 @@ class DebugHelper {
 		if(self::enabled() === false) return;
 
 		$args = func_get_args();
+
+		$trace = debug_backtrace();
+		$file	= $trace[0]['file']." => ".$trace[0]['line'];
+		$method = $trace[1]['class'].$trace[1]['type'].$trace[1]['function'];
+		$line	= $trace[0]['line'];
+		$parms	= $trace[1]['args'];
+
 		$newargs = array(LOG::DEBUG);
-		self::logger(array_merge($newargs, $args));
+		self::logger(array_merge($newargs, array($method, $line, $args[0], $parms)));
 	}
 
 	/**
@@ -100,8 +115,15 @@ class DebugHelper {
 		if(self::enabled() === false) return;
 
 		$args = func_get_args();
+
+		$trace = debug_backtrace();
+		$file	= $trace[0]['file']." => ".$trace[0]['line'];
+		$method = $trace[1]['class'].$trace[1]['type'].$trace[1]['function'];
+		$line	= $trace[0]['line'];
+		$parms	= $trace[1]['args'];
+
 		$newargs = array(LOG::ERROR);
-		self::logger(array_merge($newargs, $args));
+		self::logger(array_merge($newargs, array($method, $line, $args[0], $parms)));
 	}
 
 	/**
@@ -115,8 +137,15 @@ class DebugHelper {
 		if(self::enabled() === false) return;
 
 		$args = func_get_args();
+
+		$trace = debug_backtrace();
+		$file	= $trace[0]['file']." => ".$trace[0]['line'];
+		$method = $trace[1]['class'].$trace[1]['type'].$trace[1]['function'];
+		$line	= $trace[0]['line'];
+		$parms	= $trace[1]['args'];
+
 		$newargs = array(LOG::WARNING);
-		self::logger(array_merge($newargs, $args));
+		self::logger(array_merge($newargs, array($method, $line, $args[0], $parms)));
 	}
 
 	/**
@@ -130,8 +159,15 @@ class DebugHelper {
 		if(self::enabled() === false) return;
 
 		$args = func_get_args();
+
+		$trace = debug_backtrace();
+		$file	= $trace[0]['file']." => ".$trace[0]['line'];
+		$method = $trace[1]['class'].$trace[1]['type'].$trace[1]['function'];
+		$line	= $trace[0]['line'];
+		$parms	= $trace[1]['args'];
+
 		$newargs = array(LOG::INFO);
-		self::logger(array_merge($newargs, $args));
+		self::logger(array_merge($newargs, array($method, $line, $args[0], $parms)));
 	}
 
 	/**

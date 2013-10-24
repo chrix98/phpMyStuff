@@ -44,7 +44,7 @@ class Model_User extends Useradmin_Model_User {
 
 	public function upload_avatar($avatarInput)
 	{
-		$bm = DebugHelper::func_open(__METHOD__, __LINE__, $avatarInput);
+		$bm = DebugHelper::func_open( $avatarInput);
 		$ret = false;
 
 		//	this input is an array and somehow the index names get foobared
@@ -57,7 +57,7 @@ class Model_User extends Useradmin_Model_User {
 		$avatar = ORM::factory('avatar');
 		$ret= $avatar->create_avatar('AVATAR_USER', $avatarInput);
 
-		DebugHelper::func_close(__METHOD__, __LINE__, $bm, $ret);
+		DebugHelper::func_close( $bm, $ret);
 		return $ret;
 	}
 

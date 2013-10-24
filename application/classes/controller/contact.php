@@ -46,14 +46,14 @@ class Controller_Contact extends Controller_App {
 	public function action_index()
 	{
 		$id = $this->request->param('id');
-		$bm = DebugHelper::func_open(__METHOD__ , __LINE__, $id);
+		$bm = DebugHelper::func_open($id);
 
 		$userAuth = Auth::instance();
 		$user = $userAuth->get_user();
 
 		//	this if/else is to generate info for the template top
 		if($userAuth->logged_in()){
-			DebugHelper::ilog(__METHOD__, __LINE__, "user is logged in");
+			DebugHelper::ilog("user is logged in");
 			$userAuthStatus = 'in';
 			$userAuthLink = URL::current().'/user/logout';	//	to toggle login status
 			$userAuthStatusLabel = __('Logged in');
@@ -61,7 +61,7 @@ class Controller_Contact extends Controller_App {
 			$template__showContactDetailsPost = true;
 			$template__showContactDetailsPhone = true;
 		}else{
-			DebugHelper::ilog(__METHOD__, __LINE__, "user is not logged in");
+			DebugHelper::ilog("user is not logged in");
 			$userAuthStatus = 'out';
 			$userAuthLink = URL::current().'/user/login';	//	to toggle login status
 			$userAuthStatusLabel = __('not logged in');
@@ -89,10 +89,10 @@ class Controller_Contact extends Controller_App {
 		$view->set('session_link' , $template__session_link);
 		$view->set('showContactDetailsPost', $template__showContactDetailsPost);
 		$view->set('showContactDetailsPhone', $template__showContactDetailsPhone);
-		
+
 		$this->template->content = $view;
 
-		DebugHelper::func_close(__METHOD__ , __LINE__ , $bm);
+		DebugHelper::func_close($bm);
 	}
 
 } // End Welcome

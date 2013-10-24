@@ -20,12 +20,12 @@ class Controller_Avatar extends Controller {
 	public function action_get()
 	{
 		$hash = $this->request->param('id');
-		$bm = DebugHelper::func_open(__METHOD__ , __LINE__, $hash);
+		$bm = DebugHelper::func_open($hash);
 		$ret = false;
 		$avatar = ORM::factory('avatar');
 
 		if(!$ret = $avatar->get_avatar_file($hash)) {
-			DebugHelper::dlog(__METHOD__, __LINE__, "failed to find avatar file for hash: ", $hash);
+			DebugHelper::dlog("failed to find avatar file for hash: ", $hash);
 
 		}else{
 			switch($ret['provider_id'])
@@ -48,7 +48,6 @@ class Controller_Avatar extends Controller {
 		}
 
 
-		DebugHelper::func_close(__METHOD__ , __LINE__ , $bm);
+		DebugHelper::func_close($bm);
 	}
 }
-

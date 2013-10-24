@@ -1006,7 +1006,12 @@ abstract class BaseFacebook {
     protected function getCurrentUrl()
     {
         $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? 'https://' : 'http://';
-        $currentUrl = $protocol . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+    //  NOCOMMIT START
+    //  the below issue with request and http_host and stuff must have deeper sources, here is only a workaround not a solution.
+    //  TODO find out where the request uri is comint from, if this is a server hickup or what ...
+#        $currentUrl = $protocol . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+        $currentUrl = $protocol . str_replace($protocol,'', $_SERVER['REQUEST_URI']);
+    //  NCOMMIT END
         $parts = parse_url($currentUrl);
 
         $query = '';

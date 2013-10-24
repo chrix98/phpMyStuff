@@ -46,14 +46,14 @@ class Controller_Files extends Controller_App {
 	public function action_index()
 	{
 		$id = $this->request->param('id');
-		$bm = DebugHelper::func_open(__METHOD__ , __LINE__, $id);
+		$bm = DebugHelper::func_open($id);
 
 		$userAuth = Auth::instance();
 		$user = $userAuth->get_user();
 
 		//	this if/else is to generate info for the template top
 		if($userAuth->logged_in()){
-			DebugHelper::ilog(__METHOD__, __LINE__, "user is logged in");
+			DebugHelper::ilog("user is logged in");
 			$userAuthStatus = 'in';
 			$userAuthLink = URL::current().'/user/logout';	//	to toggle login status
 			$userAuthStatusLabel = __('Logged in');
@@ -67,7 +67,7 @@ class Controller_Files extends Controller_App {
 				)
 			);
 		}else{
-			DebugHelper::ilog(__METHOD__, __LINE__, "user is not logged in");
+			DebugHelper::ilog("user is not logged in");
 			$userAuthStatus = 'out';
 			$userAuthLink = URL::current().'/user/login';	//	to toggle login status
 			$userAuthStatusLabel = __('not logged in');
@@ -85,8 +85,8 @@ class Controller_Files extends Controller_App {
 		// Get the total count for the pagination
 //		$total = $files->count_all();
 		$total = 0;
-		DebugHelper::iLog(__METHOD__, __LINE__, "total files number: ", $total);
-		
+		DebugHelper::iLog("total files number: ", $total);
+
 		// Create a paginator
 		$pagination = new Pagination(array(
 			'total_items' => $total,
@@ -97,10 +97,12 @@ class Controller_Files extends Controller_App {
 		// Get the items for the query
 		$sort = isset($_GET['sort']) ? $_GET['sort'] : 'created'; // set default sorting direction here
 		$dir = isset($_GET['dir']) ? 'DESC' : 'ASC';
-/*		$result = $files->limit($pagination->items_per_page)
+/*
+		$result = $files->limit($pagination->items_per_page)
 			->offset($pagination->offset)
 			->order_by($sort, $dir)
-			->find_all(); */
+			->find_all();
+*/
 		$result = array();
 		// render view
 		// pass the paginator, result and default sorting direction
@@ -109,7 +111,7 @@ class Controller_Files extends Controller_App {
 			->set('paging', $pagination)
 			->set('default_sort', $sort);
 
-		DebugHelper::func_close(__METHOD__ , __LINE__ , $bm);
+		DebugHelper::func_close($bm);
 	}
 
 } // End Welcome

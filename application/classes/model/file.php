@@ -172,10 +172,10 @@ class Model_File extends ORM
 	public function __construct($id=null) {
 
 		$this->fileconfig = Kohana::$config->load('files');
-		DebugHelper::dlog(__METHOD__, __LINE__, "loaded config: ", $this->fileconfig);
+		DebugHelper::dlog( "loaded config: ", $this->fileconfig);
 
 		if(!Auth::instance()->logged_in()) {
-			DebugHelper::dlog(__METHOD__, __LINE__, "Anonymous access denied");
+			DebugHelper::dlog( "Anonymous access denied");
 			Message::add('auth', 'Anonymous users can not upload files');
 			Url::redirect(Url::base()."/auth/login");
 		}else{
@@ -189,23 +189,23 @@ class Model_File extends ORM
 
 	public function store_file($filename, $filetype)
 	{
-		$bm = DebugHelper::func_open(__METHOD__, __LINE__,$filename, $filetype);
+		$bm = DebugHelper::func_open($filename, $filetype);
 		$ret = false;
 
 		if(!$newAvPath = $this->path($filename, $filetype)) {
-			DebugHelper::dlog(__METHOD__, __LINE__, "new path failed - probably type invalid.");
+			DebugHelper::dlog( "new path failed - probably type invalid.");
 		}else{
-			DebugHelper::dlog(__METHOD__, __LINE__, "newAvPath: ", $newAvPath);
+			DebugHelper::dlog( "newAvPath: ", $newAvPath);
 
 			//	now moving the file to its new destination
 			if(! rename($filename, $newAvPath)) {
-				DebugHelper::dlog(__METHOD__, __LINE__, "renaming file failed; ", $path, $newAvPath);
+				DebugHelper::dlog( "renaming file failed; ", $path, $newAvPath);
 			}else{
 				$ret = $newAvPath;
 			}
 		}
 
-		DebugHelper::func_close(__METHOD__, __LINE__, $bm, $ret);
+		DebugHelper::func_close( $bm, $ret);
 		return $ret;
 	}
 
@@ -224,22 +224,22 @@ class Model_File extends ORM
 	*/
 	private function check_user_dirs()
 	{
-		$bm = DebugHelper::func_open(__METHOD__, __LINE__, null);
+		$bm = DebugHelper::func_open( null);
 		$dir_userfiles = $this->fileconfig->get('dir_userfiles');
 		$home_dir = $this->fileconfig->get('dir_userfiles')
                         .$this->fileconfig->get('prefix_dir_user')
                         .$this->user->id."/";
 
 		if(!file_exists($home_dir)) {
-			DebugHelper::dlog(__METHOD__, __LINE__, "homedir doesn't exist ...");
+			DebugHelper::dlog( "homedir doesn't exist ...");
 			if(! mkdir($home_dir)) {
-				DebugHelper::dlog(__METHOD__, __LINE__, "failed to create homedir, check directory permissions");
+				DebugHelper::dlog( "failed to create homedir, check directory permissions");
 				$ret = false;
 			}else{
-				DebugHelper::dlog(__METHOD__, __LINE__, "homedir created OK");
+				DebugHelper::dlog( "homedir created OK");
 			}
 		}else{
-			DebugHelper::dlog(__METHOD__, __LINE__, "home dir exists OK");
+			DebugHelper::dlog( "home dir exists OK");
 		}
 
 		if($udd = opendir($dir_userfiles."user_default")) {
@@ -259,7 +259,7 @@ class Model_File extends ORM
 						if(
 							copy($dir_userfiles."user_default/".$defaultfile,	$home_dir."/".$defaultfile)	)
 						{
-							DebugHelper::dlog(__METHOD__, __LINE__,
+							DebugHelper::dlog(
 								"default file :defaultfile copied ok to :homedir ",
 									array('defaultfile'=>$defaultfile, 'homedir'=>$home_dir));
 						}
@@ -268,7 +268,7 @@ class Model_File extends ORM
 			}
 		}
 
-		DebugHelper::func_close(__METHOD__, __LINE__, $bm, true);
+		DebugHelper::func_close( $bm, true);
 	}
 
 
@@ -283,12 +283,12 @@ class Model_File extends ORM
 	*/
 	private function path($filename, $type)
 	{
-		$bm = DebugHelper::func_open(__METHOD__, __LINE__, $filename, $type);
+		$bm = DebugHelper::func_open( $filename, $type);
 		$filename 	= basename($filename);
 		$rootdir 	= '';
 
 		if(!$this->filetype_valid($type)) {
-			DebugHelper::wlog(__METHOD__, __LINE__, "invalid file type: ", $type);
+			DebugHelper::wlog( "invalid file type: ", $type);
 			return false;
 		}else{
 			$type = $this->filetypes($type);	//	comes in as text indicating array index
@@ -357,7 +357,7 @@ class Model_File extends ORM
 
 		$ret = $rootdir.$filename;
 
-		DebugHelper::func_close(__METHOD__, __LINE__, $bm, $ret);
+		DebugHelper::func_close( $bm, $ret);
 		return $ret;
 	}
 
@@ -370,11 +370,11 @@ class Model_File extends ORM
 	*/
 	public function filetypes($which=null)
 	{
-		$bm = DebugHelper::func_open(__METHOD__, __LINE__, $which);
+		$bm = DebugHelper::func_open( $which);
 
 		$ret = isset($this->_filetypes[$which]) ? $this->_filetypes[$which] : $this->_filetypes;
 
-		DebugHelper::func_close(__METHOD__, __LINE__, $bm, $ret);
+		DebugHelper::func_close( $bm, $ret);
 		return $ret;
 	}
 
@@ -387,16 +387,16 @@ class Model_File extends ORM
 	*/
 	public function filetype_valid($type)
 	{
-		$bm = DebugHelper::func_open(__METHOD__, __LINE__,$type);
+		$bm = DebugHelper::func_open($type);
 
 		if(!in_array($type, array_keys($this->_filetypes))) {
-			DebugHelper::wlog(__METHOD__, __LINE__, "disallowed file type: ", $type);
+			DebugHelper::wlog( "disallowed file type: ", $type);
 			$ret = false;
 		}else{
 			$ret = true;
 		}
 
-		DebugHelper::func_close(__METHOD__, __LINE__, $bm, $ret);
+		DebugHelper::func_close( $bm, $ret);
 		return $ret;
 	}
 }

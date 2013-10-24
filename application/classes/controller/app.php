@@ -6,20 +6,20 @@ class Controller_App extends Useradmin_Controller_App {
 	function user_verify($redirToLogin=false)
 	{
 		$args = func_get_args();
-		$bm = DebugHelper::func_open(__METHOD__ , __LINE__, $args);
+		$bm = DebugHelper::func_open($args);
 
 		$userAuth = Auth::instance();
 		$user = $userAuth->get_user();
 
-		DebugHelper::dlog(__METHOD__,__LINE__,'Auth Required: ' ,$this->auth_required);
+		DebugHelper::dlog('Auth Required: ' ,$this->auth_required);
 
 		if($userAuth->logged_in($this->auth_required))	{
-			DebugHelper::ilog(__METHOD__, __LINE__, "user is logged in");
+			DebugHelper::ilog("user is logged in");
 			$this->userAuthStatus 		= 'in';
 			$this->userAuthLink 		= 'user/logout';	//	to toggle login status
 			$this->userAuthStatusLabel 	= __('Logged in');
 		}else{
-			DebugHelper::ilog(__METHOD__, __LINE__, "user is not logged in");
+			DebugHelper::ilog("user is not logged in");
 			$this->userAuthStatus 		= 'out';
 			$this->userAuthLink 		= 'user/login';	//	to toggle login status
 			$this->userAuthStatusLabel 	= __('not logged in');
@@ -28,7 +28,7 @@ class Controller_App extends Useradmin_Controller_App {
 		if($redirToLogin!==false && $this->userAuthStatus=='out')	{
 			URL::redirect($this->userAuthLink);
 		}
-		DebugHelper::func_close(__METHOD__ , __LINE__ , $bm);
+		DebugHelper::func_close($bm);
 	}
 
 	/**
@@ -38,7 +38,7 @@ class Controller_App extends Useradmin_Controller_App {
 	protected function auto_render_before()
 	{
 		$args = func_get_args();
-		$bm = DebugHelper::func_open(__METHOD__ , __LINE__, $args);
+		$bm = DebugHelper::func_open($args);
 
 			// only load the template if the template has not been set..
 			$this->template = View::factory($this->template);
@@ -56,7 +56,7 @@ class Controller_App extends Useradmin_Controller_App {
 			// ActionName will contain the name of the Action in the Template
 			$this->template->actionName = $this->request->action();
 				// next, it is expected that $this->template->content is set e.g. by rendering a view into it.
-		DebugHelper::func_close(__METHOD__ , __LINE__ , $bm);
+		DebugHelper::func_close($bm);
 	}
 
 	/**
@@ -66,7 +66,7 @@ class Controller_App extends Useradmin_Controller_App {
 	protected function auto_render_after()
 	{
 		$args = func_get_args();
-		$bm = DebugHelper::func_open(__METHOD__ , __LINE__, $args);
+		$bm = DebugHelper::func_open($args);
 		/*
 		 *	we dont really need this. the moment we use the auto_render_before we're kicking off the template so we may as
 		 *	well leave the template (parent) after() function take care of it by (manyally) turning on auto_render.
@@ -85,13 +85,13 @@ class Controller_App extends Useradmin_Controller_App {
 		// Assign the template as the request response and render it
 		$this->response->body($this->template);
 		 */
-		DebugHelper::func_close(__METHOD__ , __LINE__ , $bm);
+		DebugHelper::func_close($bm);
 	}
 
 	protected function ajax_response($response)
 	{
 		//$args = func_get_args();
-		$bm = DebugHelper::func_open(__METHOD__ , __LINE__, $response);
+		$bm = DebugHelper::func_open($response);
 
 		$response = json_encode($response);
 
@@ -100,6 +100,6 @@ class Controller_App extends Useradmin_Controller_App {
 
 		// Assign the template as the request response and render it
 		$this->response->body($response);
-		DebugHelper::func_close(__METHOD__ , __LINE__ , $bm);
+		DebugHelper::func_close($bm);
 	}
 }

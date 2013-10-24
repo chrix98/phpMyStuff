@@ -9,7 +9,7 @@ class URL extends Kohana_URL {
 
 	static function redirect($url)
 	{
-		DebugHelper::ilog(__METHOD__,__LINE__,'redirecting to:' ,$url);
+		DebugHelper::ilog('redirecting to:' ,$url);
 		Request::current()->redirect($url);
 	}
 }

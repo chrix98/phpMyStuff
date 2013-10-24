@@ -64,7 +64,7 @@ class Useradmin_Controller_User extends Controller_App {
         }
 
         parent::before();
-        
+
     }
 
 	// USER SELF-MANAGEMENT
@@ -496,10 +496,10 @@ class Useradmin_Controller_User extends Controller_App {
 						//               $user->failed_login_count = 0;
 						$user->save();
 						//Message::add('success', __('Password reset.'));
-						Message::add('success', '<p>' 
-						                      . __('Your password has been reset to: ":password".', array(':password' => $password)) 
-						                      . '</p><p>' 
-						                      . __('Please log in below.') 
+						Message::add('success', '<p>'
+						                      . __('Your password has been reset to: ":password".', array(':password' => $password))
+						                      . '</p><p>'
+						                      . __('Please log in below.')
 						                      . '</p>'
 						);
 						$this->request->redirect('user/login?username=' . $user->username);
@@ -590,7 +590,7 @@ class Useradmin_Controller_User extends Controller_App {
 	function action_associate($provider_name = null)
 	{
 		$provider_name = $this->request->param('provider', $provider_name);
-		
+
 		if ($this->request->query('code') && $this->request->query('state'))
 		{
 			$this->action_associate_return($provider_name);
@@ -698,7 +698,7 @@ class Useradmin_Controller_User extends Controller_App {
 	function action_provider_return($provider_name = null)
 	{
 		$provider_name = $this->request->param('provider', $provider_name);
-		
+
 		$provider = Provider::factory($provider_name);
 		if (! is_object($provider))
 		{
@@ -779,7 +779,7 @@ class Useradmin_Controller_User extends Controller_App {
 					 */
 					Message::add('error', 'A matching account already exists with another provider. Please select another login or registration method.');
 					$this->request->redirect('user/login');
-					
+
 					if ($provider_name == 'twitter')
 					{
 						Message::add('error', 'The Twitter API does not support retrieving your email address; you will have to enter it manually.');

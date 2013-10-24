@@ -31,12 +31,12 @@ class Model_Avatar extends ORM {
 
 	public function __construct($id=null)
 	{
-		$bm = DebugHelper::func_open(__METHOD__, __LINE__, $id);
+		$bm = DebugHelper::func_open($id);
 		$ret = false;
 
 		parent::__construct($id);
 
-		DebugHelper::func_close(__METHOD__, __LINE__, $bm, $ret);
+		DebugHelper::func_close($bm, $ret);
 		return $ret;
 	}
 
@@ -52,7 +52,7 @@ class Model_Avatar extends ORM {
 	*/
 	public function create_avatar($sAvType, $oAvatar)
 	{
-		$bm = DebugHelper::func_open(__METHOD__, __LINE__,$oAvatar);
+		$bm = DebugHelper::func_open($oAvatar);
 		$ret = false;
 
 		$this->set_avatartype($sAvType);
@@ -76,17 +76,17 @@ class Model_Avatar extends ORM {
 			)
 		);
 
-		DebugHelper::func_close(__METHOD__, __LINE__, $bm, $ret);
+		DebugHelper::func_close($bm, $ret);
 		return $ret;
 	}
 
 
 	public function get_avatar_url()
 	{
-		$bm = DebugHelper::func_open(__METHOD__, __LINE__,null);
+		$bm = DebugHelper::func_open(null);
 		$ret = false;
 
-		DebugHelper::dlog(__METHOD__, __LINE__, "provider id: ", $this->provider_id);
+		DebugHelper::dlog("provider id: ", $this->provider_id);
 
 		switch($this->provider_id) {
 			case '1':
@@ -99,19 +99,19 @@ class Model_Avatar extends ORM {
 			break;
 		}
 
-		DebugHelper::func_close(__METHOD__, __LINE__, $bm, $ret);
+		DebugHelper::func_close($bm, $ret);
 		return $ret;
 	}
 
 	public function get_avatar_file($hash)
 	{
-		$bm = DebugHelper::func_open(__METHOD__, __LINE__, $hash);
+		$bm = DebugHelper::func_open($hash);
 		$ret = false;
 
 		if(!$avatar = $this->find_by_hash($hash)) {
-			DebugHelper::dlog(__METHOD__, __LINE__, "failed to find avatar by hash");
+			DebugHelper::dlog("failed to find avatar by hash");
 
-			DebugHelper::func_close(__METHOD__, __LINE__, $bm, $avatar);
+			DebugHelper::func_close($bm, $avatar);
 			return $avatar;
 		}
 
@@ -127,7 +127,7 @@ class Model_Avatar extends ORM {
 
 
 
-		DebugHelper::func_close(__METHOD__, __LINE__, $bm, $ret);
+		DebugHelper::func_close($bm, $ret);
 		return $ret;
 	}
 
@@ -138,7 +138,7 @@ class Model_Avatar extends ORM {
 
 	private function avatar_create($oAvatar)
 	{
-		$bm = DebugHelper::func_open(__METHOD__, __LINE__, $oAvatar);
+		$bm = DebugHelper::func_open($oAvatar);
 		$ret = false;
 
 		$this->owner_id 		= $this->_pertain_id;
@@ -149,19 +149,19 @@ class Model_Avatar extends ORM {
 		#$this->provider_data	= null;
 
 		if(	$this->save() ) {
-			DebugHelper::dlog(__METHOD__, __LINE__, "saved OK");
+			DebugHelper::dlog("saved OK");
 			$ret = $this->id;
 		}else{
-			DebugHelper::dlog(__METHOD__, __LINE__, "saved FAIL");
+			DebugHelper::dlog("saved FAIL");
 		}
 
-		DebugHelper::func_close(__METHOD__, __LINE__, $bm, $ret);
+		DebugHelper::func_close($bm, $ret);
 		return $ret;
 	}
 
 	private function avatar_update($oAvatar)
 	{
-		$bm = DebugHelper::func_open(__METHOD__, __LINE__,$oAvatar);
+		$bm = DebugHelper::func_open($oAvatar);
 		$ret = false;
 		$set = false;
 
@@ -179,10 +179,10 @@ class Model_Avatar extends ORM {
 				$this->save();
 			}catch (ORM_Validation_Exception $e)
 			{
-				DebugHelper::dlog(__METHOD__, __LINE__, "Could not save avatar object: ", $e->errors('update'));
+				DebugHelper::dlog("Could not save avatar object: ", $e->errors('update'));
 			}
 		}
-		DebugHelper::func_close(__METHOD__, __LINE__, $bm, $ret);
+		DebugHelper::func_close($bm, $ret);
 		return $ret;
 	}
 
@@ -192,11 +192,11 @@ class Model_Avatar extends ORM {
 
 	private function add_file()
 	{
-		$bm = DebugHelper::func_open(__METHOD__, __LINE__, null);
+		$bm = DebugHelper::func_open(null);
 		$ret = false;
 
 		$file = $_FILES['avatar_data_file'];
-		DebugHelper::dlog(__METHOD__, __LINE__, "...processing file: ", $file);
+		DebugHelper::dlog("...processing file: ", $file);
 
 		// check if there is an uploaded file
 		if (Upload::valid($file))
@@ -204,16 +204,16 @@ class Model_Avatar extends ORM {
 			$filename = uniqid().Inflector::humanize($file['name']);
 
 			$path = Upload::save($file, 'avatars/'.$filename);
-			DebugHelper::dlog(__METHOD__, __LINE__, "uploaded file path: ", $path);
+			DebugHelper::dlog("uploaded file path: ", $path);
 			if ($path)
 			{
 				//	we only load the model if we really need it ...
 				$this->_filemodel = ORM::factory('file');	//	needs to run before add_avatar()
 
-				DebugHelper::dlog(__METHOD__, __LINE__, "file type: ", $this->_filetype);
+				DebugHelper::dlog("file type: ", $this->_filetype);
 
 				if($stored_file = $this->_filemodel->store_file($path, $this->_filetype)) {
-					DebugHelper::dlog(__METHOD__, __LINE__, "stored file: ", $stored_file);
+					DebugHelper::dlog("stored file: ", $stored_file);
 
 					//	file object definitions
 					$this->_filemodel->filetype			= $this->_filemodel->filetypes($this->_filetype);
@@ -232,29 +232,29 @@ class Model_Avatar extends ORM {
 
 					//	storing file data in files object
 					if(!$this->_filemodel->save()) {
-						DebugHelper::wlog(__METHOD__, __LINE__, "failed to store avatar file");
+						DebugHelper::wlog("failed to store avatar file");
 						// todo 2 -o chris -c general : make this error interactive
 					}else{
 						$ret = $this->_filemodel->id;	//	this is the ID of the files object
-						DebugHelper::dlog(__METHOD__, __LINE__, "file saved: ", $ret);
+						DebugHelper::dlog("file saved: ", $ret);
 					}
 
 				}else{
-					DebugHelper::dlog(__METHOD__, __LINE__, "can not store file in new location");
+					DebugHelper::dlog("can not store file in new location");
 				}
 
 			}else{
-				DebugHelper::dlog(__METHOD__, __LINE__, "moving avatar file to tmp location failed.", $path, $filename);
+				DebugHelper::dlog("moving avatar file to tmp location failed.", $path, $filename);
 			}
 		}
 
-		DebugHelper::func_close(__METHOD__, __LINE__, $bm, $ret);
+		DebugHelper::func_close($bm, $ret);
 		return $ret;
 	}
 
 	private function get_file($oAvatar)
 	{
-		$bm = DebugHelper::func_open(__METHOD__, __LINE__, $oAvatar);
+		$bm = DebugHelper::func_open($oAvatar);
 		$ret = false;
 		$this->_fileconfig = Kohana::$config->load('files');
 
@@ -318,18 +318,18 @@ class Model_Avatar extends ORM {
 			}
 		}
 
-		DebugHelper::func_close(__METHOD__, __LINE__, $bm, $ret);
+		DebugHelper::func_close($bm, $ret);
 		return $ret;
 	}
 
 	private function add_gravatar()
 	{
-		$bm = DebugHelper::func_open(__METHOD__, __LINE__,null);
+		$bm = DebugHelper::func_open(null);
 		$ret = false;
 
-		DebugHelper::elog(__METHOD__, __LINE__, "not implemented yet");
+		DebugHelper::elog("not implemented yet");
 
-		DebugHelper::func_close(__METHOD__, __LINE__, $bm, $ret);
+		DebugHelper::func_close($bm, $ret);
 		return $ret;
 	}
 
@@ -339,7 +339,7 @@ class Model_Avatar extends ORM {
 
 	public function set_avatartype($sAvType)
 	{
-		$bm = DebugHelper::func_open(__METHOD__, __LINE__,$sAvType);
+		$bm = DebugHelper::func_open($sAvType);
 		$ret = false;
 
 		switch($this->avatar_types($sAvType))
@@ -366,17 +366,17 @@ class Model_Avatar extends ORM {
 				$ret = 3;
 			break;
 			case false:
-				DebugHelper::dlog(__METHOD__, __LINE__, "avatar type is invalid.");
+				DebugHelper::dlog("avatar type is invalid.");
 				$ret = false;
 		}
 
-		DebugHelper::func_close(__METHOD__, __LINE__, $bm, $ret);
+		DebugHelper::func_close($bm, $ret);
 		return $ret;
 	}
 
 	public function avatar_types($which=null, $value=null)
 	{
-		$bm = DebugHelper::func_open(__METHOD__, __LINE__,$which);
+		$bm = DebugHelper::func_open($which);
 		$ret = false;
 
 		if(empty($which)){
@@ -390,37 +390,37 @@ class Model_Avatar extends ORM {
 			$ret = false;
 		}
 
-		DebugHelper::func_close(__METHOD__, __LINE__, $bm, $ret);
+		DebugHelper::func_close($bm, $ret);
 		return $ret;
 	}
 
 	public function providers($which=null)
 	{
-		$bm = DebugHelper::func_open(__METHOD__, __LINE__,$which);
+		$bm = DebugHelper::func_open($which);
 		$ret = false;
 
 		$ret = isset($this->_providers[$which]) ? $this->_providers[$which] : $this->_providers;
 
-		DebugHelper::func_close(__METHOD__, __LINE__, $bm, $ret);
+		DebugHelper::func_close($bm, $ret);
 		return $ret;
 	}
 
 	public function find_by_hash($hash) {
-		$bm = DebugHelper::func_open(__METHOD__, __LINE__,$hash);
+		$bm = DebugHelper::func_open($hash);
 		$ret = false;
 
 		$results = $this->find_all()->as_array();
-		DebugHelper::dlog(__METHOD__, __LINE__, "results: ", $results);
+		DebugHelper::dlog("results: ", $results);
 
 		foreach($results as $row=>$data) {
 			if(substr(md5($data->id), 10, 15) == $hash) {
 				$ret = $data;
-				DebugHelper::dlog(__METHOD__, __LINE__, "we have a match: ", $ret);
+				DebugHelper::dlog("we have a match: ", $ret);
 				continue;
 			}
 		}
 
-		DebugHelper::func_close(__METHOD__, __LINE__, $bm, $ret);
+		DebugHelper::func_close($bm, $ret);
 		return $ret;
 	}
 //	public function filetypes($which=null){
