@@ -31,6 +31,8 @@ class Model_Avatar extends ORM {
 
 	public function __construct($id=null)
 	{
+		#DebugHelper::init('model', null, 4);
+
 		$bm = DebugHelper::func_open($id);
 		$ret = false;
 

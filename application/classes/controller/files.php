@@ -11,6 +11,8 @@
 
  **/
 
+#DebugHelper::init('controller', null, LOG::DEBUG);
+
 class Controller_Files extends Controller_App {
 
 	/**

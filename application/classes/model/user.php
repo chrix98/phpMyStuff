@@ -1,5 +1,7 @@
 <?php defined('SYSPATH') or die('No direct access allowed.');
 
+#DebugHelper::init('model', null, 8);
+
 class Model_User extends Useradmin_Model_User {
 
 

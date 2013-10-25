@@ -6,6 +6,7 @@
  * Description:
 
  **/
+#DebugHelper::init('controller', null, LOG::DEBUG);
 
 class Controller_Avatar extends Controller {
 

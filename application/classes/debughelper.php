@@ -13,8 +13,21 @@
 
 class DebugHelper {
 
-	public function __construct(){
+	private static $default_type		= 'class';
 
+	private static $type;
+	private static $severity;
+
+	private static $log_to_file = false;
+	private static $log_to_db	= true;
+
+	public function __construct(){
+		self::$type 		= self::$default_type ;
+	}
+
+	public static function init($type=null)
+	{
+		self::$type 	= (empty($type) 	? self::$default_type : $type);
 	}
 
 	/**
@@ -28,6 +41,7 @@ class DebugHelper {
 	{
 		if(self::enabled() === false) return;
 
+		$args	= func_get_args();
 		$trace = debug_backtrace();
 
 		$file	= $trace[0]['file']." => ".$trace[0]['line'];
@@ -35,8 +49,17 @@ class DebugHelper {
 		$line	= $trace[0]['line'];
 		$parms	= $trace[1]['args'];
 
-		$newargs = array(LOG::DEBUG);
-		self::logger(array_merge($newargs, array($method, $line, "\t====== entered" . (!empty($parms) ? ' with args:':''), $parms) ));
+		self::logger(
+					self::$type,
+					LOG::DEBUG,
+					$trace[0]['file'],
+					$trace[1]['class'],
+					$trace[1]['type'],
+					$trace[1]['function'],
+					$trace[0]['line'],
+					"entered" . (!empty($parms) ? ' with args:':''),
+					$parms
+					);
 
 		$benchmark = null;
 
@@ -61,9 +84,7 @@ class DebugHelper {
 	public static function func_close()
 	{
 		if(self::enabled() === false) return;
-
-		$args	= func_get_args();
-
+		$args 	= func_get_args();
 		$trace 	= debug_backtrace();
 		$file	= $trace[0]['file']." => ".$trace[0]['line'];
 		$method = $trace[1]['class'].$trace[1]['type'].$trace[1]['function'];
@@ -77,9 +98,17 @@ class DebugHelper {
 		if(!empty($benchmark))
 			Profiler::stop($benchmark);
 
-		//self::dlog($method, $line, "========== finished".(null!==$parms? ", returning: " : ""), $parms);
-		$newargs = array(LOG::DEBUG);
-		self::logger(array_merge($newargs, array($method, $line, "\t====== finished". (!empty($parms) ? ', returning:' : ''),$parms)));
+		self::logger(
+					self::$type,
+					LOG::DEBUG,
+					$trace[0]['file'],
+					$trace[1]['class'],
+					$trace[1]['type'],
+					$trace[1]['function'],
+					$trace[0]['line'],
+					"finished". (!empty($parms) ? ', returning:' : ''),
+					$parms
+					);
 	}
 
 	/**
@@ -100,8 +129,17 @@ class DebugHelper {
 		$line	= $trace[0]['line'];
 		$parms	= $trace[1]['args'];
 
-		$newargs = array(LOG::DEBUG);
-		self::logger(array_merge($newargs, array($method, $line, $args[0], $parms)));
+		self::logger(
+					self::$type,
+					LOG::DEBUG,
+					$trace[0]['file'],
+					$trace[1]['class'],
+					$trace[1]['type'],
+					$trace[1]['function'],
+					$trace[0]['line'],
+					$args[0],
+					$parms
+					);
 	}
 
 	/**
@@ -122,8 +160,17 @@ class DebugHelper {
 		$line	= $trace[0]['line'];
 		$parms	= $trace[1]['args'];
 
-		$newargs = array(LOG::ERROR);
-		self::logger(array_merge($newargs, array($method, $line, $args[0], $parms)));
+		self::logger(
+					self::$type,
+					LOG::ERROR,
+					$trace[0]['file'],
+					$trace[1]['class'],
+					$trace[1]['type'],
+					$trace[1]['function'],
+					$trace[0]['line'],
+					$args[0],
+					$parms
+					);
 	}
 
 	/**
@@ -144,8 +191,18 @@ class DebugHelper {
 		$line	= $trace[0]['line'];
 		$parms	= $trace[1]['args'];
 
-		$newargs = array(LOG::WARNING);
-		self::logger(array_merge($newargs, array($method, $line, $args[0], $parms)));
+		self::logger(
+			self::$type,
+			LOG::WARNING,
+			$trace[0]['file'],
+			$trace[1]['class'],
+			$trace[1]['type'],
+			$trace[1]['function'],
+			$trace[0]['line'],
+			$args[0],
+			$parms
+			);
+
 	}
 
 	/**
@@ -166,8 +223,17 @@ class DebugHelper {
 		$line	= $trace[0]['line'];
 		$parms	= $trace[1]['args'];
 
-		$newargs = array(LOG::INFO);
-		self::logger(array_merge($newargs, array($method, $line, $args[0], $parms)));
+		self::logger(
+					self::$type,
+					LOG::INFO,
+					$trace[0]['file'],
+					$trace[1]['class'],
+					$trace[1]['type'],
+					$trace[1]['function'],
+					$trace[0]['line'],
+					$args[0],
+					$parms
+					);
 	}
 
 	/**
@@ -183,13 +249,18 @@ class DebugHelper {
 	private static function logger() {
 		if(self::enabled() === false) return;
 
-		$xargs = func_get_args();
-		$args = $xargs[0];
+		$args = func_get_args();
+		//= $xargs[0];
 
+		$type	= array_shift($args);
 		$level	= array_shift($args);
+		$file	= array_shift($args);
+		$class	= array_shift($args);
+		$calltype = array_shift($args);
 		$method	= array_shift($args);
 		$line 	= array_shift($args);
 		$msg	= array_shift($args);
+		//$trace 	= array_shift($args);
 
 		$dumps	= array();
 		$parms	= null;
@@ -204,7 +275,24 @@ class DebugHelper {
 			$parms = implode("\n", $dumps)."\n";
 		}
 
-		LOG::instance()->add($level, $method.":>".$line.": ".$msg.$parms);
+		if(self::$log_to_file !== false)
+			LOG::instance()->add($level, $method.":>".$line.": ".$msg.$parms);
+
+		if($level <= self::threshold() && self::$log_to_db !== false) {
+			$db_log = ORM::factory('log');
+			$db_log->severity 	= $level;
+			$db_log->file		= str_replace(DOCROOT, '', $file);
+			$db_log->class		= $class;
+			$db_log->calltype	= $calltype;
+			$db_log->method		= $method;
+			$db_log->line		= $line;
+			$db_log->msg		= $msg;
+			$db_log->trace		= $parms;
+			$db_log->remote_address = $_SERVER['REMOTE_ADDR'];
+			$db_log->process_id = posix_getpid();
+			$db_log->save();
+		}
+
 	}
 
 	/**
@@ -215,7 +303,7 @@ class DebugHelper {
 	private static function dumpvars($parms){
 		if(!empty($parms))
 //			$parms = var_export($parms,1);
-			$parms = DEBUG::vars($parms);
+			$parms = DEBUG::dump($parms);
 		else
 			$parms = null;
 

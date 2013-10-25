@@ -29,6 +29,7 @@ class Controller_Welcome extends Controller_App {
 	public $auth_required = false; // FALSE | string | array
 	public $secure_actions = array('action_edit' => 'admin'); // array( action => role)
 
+
 	public function action_index()
 	{
 		$id = $this->request->param('id');

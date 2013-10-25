@@ -171,6 +171,8 @@ class Model_File extends ORM
 	*/
 	public function __construct($id=null) {
 
+		#DebugHelper::init('model', null, 8);
+
 		$this->fileconfig = Kohana::$config->load('files');
 		DebugHelper::dlog( "loaded config: ", $this->fileconfig);
 
