@@ -47,7 +47,7 @@ class DebugHelper {
 		$file	= $trace[0]['file']." => ".$trace[0]['line'];
 		$method = $trace[1]['class'].$trace[1]['type'].$trace[1]['function'];
 		$line	= $trace[0]['line'];
-		$parms	= $trace[1]['args'];
+		$parms	= $args;
 
 		self::logger(
 					self::$type,
@@ -107,7 +107,7 @@ class DebugHelper {
 					$trace[1]['function'],
 					$trace[0]['line'],
 					"finished". (!empty($parms) ? ', returning:' : ''),
-					$parms
+					isset($args[1]) ? $args[1] : null
 					);
 	}
 
@@ -138,7 +138,7 @@ class DebugHelper {
 					$trace[1]['function'],
 					$trace[0]['line'],
 					$args[0],
-					$parms
+					isset($args[1]) ? $args[1] : null
 					);
 	}
 
@@ -169,7 +169,7 @@ class DebugHelper {
 					$trace[1]['function'],
 					$trace[0]['line'],
 					$args[0],
-					$parms
+					isset($args[1]) ? $args[1] : null
 					);
 	}
 
@@ -200,7 +200,7 @@ class DebugHelper {
 			$trace[1]['function'],
 			$trace[0]['line'],
 			$args[0],
-			$parms
+			isset($args[1]) ? $args[1] : null
 			);
 
 	}
@@ -232,7 +232,7 @@ class DebugHelper {
 					$trace[1]['function'],
 					$trace[0]['line'],
 					$args[0],
-					$parms
+					isset($args[1]) ? $args[1] : null
 					);
 	}
 
@@ -252,6 +252,7 @@ class DebugHelper {
 		$args = func_get_args();
 		//= $xargs[0];
 
+
 		$type	= array_shift($args);
 		$level	= array_shift($args);
 		$file	= array_shift($args);
@@ -262,11 +263,11 @@ class DebugHelper {
 		$msg	= array_shift($args);
 		//$trace 	= array_shift($args);
 
-		$dumps	= array();
-		$parms	= null;
-
 		if(self::threshold() <= $level)
 			return false;
+
+		$dumps	= array();
+		$parms	= null;
 
 		if(count($args)>0) {
 			foreach($args as $key=>$dumpvals) {
