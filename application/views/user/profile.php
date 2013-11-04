@@ -12,7 +12,7 @@
    ?>
    <h1>
    	  <div class="avatar" style="float: left; margin: 5px 7px 0 0px;">
-  		<img src="<?php echo $avatar ?>" border="1" width="62" height="62" >
+  		<img src="<?php echo $avatar ?>" class="avatarImg_large">
       </div>
    	  <?php echo __('User profile') ?>
    </h1>
