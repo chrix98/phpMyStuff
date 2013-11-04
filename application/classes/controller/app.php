@@ -2,6 +2,9 @@
 
 class Controller_App extends Useradmin_Controller_App {
 
+	public $userAuthLink = null;
+	public $userAuthStatus = null;
+	public $userAuthStatusLabel = null;
 
 	function user_verify($redirToLogin=false)
 	{
