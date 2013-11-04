@@ -6,6 +6,16 @@
    <?php foreach ($styles as $file => $type) echo HTML::style($file, array('media' => $type)), "\n" ?>
    <?php foreach ($scripts as $file) echo HTML::script($file), "\n" ?>
    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+   <style>
+img.profileAvatarImg_small{
+   margin:			5px;
+   float:			left;
+   border-radius: 	2px 2px 2px 2px;
+   box-shadow: 		0 1px 1px gray;
+   width:			32px;
+   height:			32px;
+}
+   </style>
 </head>
 <body>
    <div id="page">
@@ -19,7 +29,9 @@
 
              if (Auth::instance()->logged_in()){
 
-			   echo '<li class="left">'.Html::anchor('/file', __('Files')).'</li>';
+			   echo '<li class="left">'.Html::anchor('/files', __('Files')).'</li>';
+			   echo '<li class="left">'.Html::anchor('/log', __('Logs')).'</li>';
+			   echo '<li class="left">'.Html::anchor('/location', __('Locations')).'</li>';
 
 			 	$avatarUrl = Orm::factory('avatar', Auth::instance()->get_user()->avatar_id )->get_avatar_url();
 			 	$sUserFirstName	= Auth::instance()->get_user()->first_name;
@@ -31,8 +43,9 @@
 				echo '<li class="right">'.Html::anchor('user/logout', __('Log out')).'</li>';
 
 				$img = sprintf(
-					"<img src='%s' border=0 width=30 height=30 style='float:left; margin: 5px; 5px;'>",
-					$avatarUrl
+					"<img src='%s' border=0 width=30 height=30 class='%s'>",
+					$avatarUrl,
+					'profileAvatarImg_small'
 				);
 
 				echo '<li class="right">'.Html::anchor('user/profile', $img." ".$sUserFirstName." ".$sUserLastName).'</li>';
